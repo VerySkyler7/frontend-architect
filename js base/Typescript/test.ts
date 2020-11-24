@@ -1,23 +1,12 @@
 class Animal {
-    name: string; 
-    constructor(name: string) {
-        this.name = name;
-    }
-    say(){
-        console.log(this.name);
-    }
+    public name: string = 'name' // correct public可以在任意地方访问
+    private age: number = 18 // correct private 只能在class内部访问
+    protected weight: number = 100 // correct protected 只能在父类和子类的内部访问
 }
 
 class Pig extends Animal {
-    age: number;
-    constructor(name: string){
-        super(name);
-        this.age = 3; // correct
-    }
-    sayHabit() {
-        super.say(); // 此处的super代表Animal的实例
+    say(){
+        this.name = "pig" // correct public可以在任意地方访问
+        this.weight = 80 // correct protected 可以在父类、子类的内部访问
     }
 }
-
-const p = new Pig('佩奇');
-p.sayHabit();
