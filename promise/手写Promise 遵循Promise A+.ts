@@ -20,10 +20,10 @@ interface IExcutor {
   (resolve: IResolve, reject: IReject): void;
 }
 
-class MyPromise {
+export class MyPromise {
   status = PromiseStatus.pending;
-  value: any;
-  reason: any;
+  value: any = undefined;
+  reason: any = undefined;
   constructor(excutor: IExcutor) {
     const resolve: IResolve = (value: any) => {
       if(this.status === PromiseStatus.pending) { // 只有是pending状态 才能执行， 也意味着promise的状态不可逆
@@ -36,6 +36,8 @@ class MyPromise {
       if(this.status === PromiseStatus.pending) { // 只有是pending状态 才能执行， 也意味着promise的状态不可逆
         this.status = PromiseStatus.rejected;
         this.reason = reason;
+        console.log(reason);
+        
         throw new Error(reason)
       }
     }
@@ -48,6 +50,6 @@ const promise = new MyPromise((resolve: IResolve, reject: IReject) => {
   reject(1);
 });
 
-promise.reason = 2;
+// promise.reason = 2;
 
-console.log(promise);
+// console.log(promise);
