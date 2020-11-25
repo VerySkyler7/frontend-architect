@@ -1,3 +1,5 @@
+import { MyPromise } from "./手写Promise 遵循Promise A+";
+
 interface IResolve {
   (value?: any): void;
 }
@@ -20,23 +22,29 @@ export class Promise {
   value: any = undefined;
   reason: any = undefined;
   state: STATE = STATE.PENDING;
-  fulfilledFns: Function[] = [];
-  rejectedFns: Function[] = [];
+  onFulfilled: Function = () => { };
+  onRejected: Function = () => { };
 
   constructor(executor: IExecutor) {
     const resolve: IResolve = (value: any) => {
-      if (this.state === STATE.PENDING) {
-        this.state = STATE.FULFILLED;
-        this.value = value;
-        this.fulfilledFns.forEach((fn) => fn(this.value));
-      }
+      setTimeout(() => {
+        if (this.state === STATE.PENDING) {
+          this.state = STATE.FULFILLED;
+          this.value = value;
+          this.onFulfilled();
+          // this.fulfilledFns.forEach((fn) => fn(this.value));
+        }
+      })
     };
     const reject: IReject = (reason: any) => {
-      if (this.state === STATE.PENDING) {
-        this.state = STATE.REJECTED;
-        this.reason = reason;
-        this.rejectedFns.forEach((fn) => fn(this.reason));
-      }
+      setTimeout(() => {
+        if (this.state === STATE.PENDING) {
+          this.state = STATE.REJECTED;
+          this.reason = reason;
+          this.onRejected();
+          // this.rejectedFns.forEach((fn) => fn(this.reason));
+        }
+      })
     };
     try {
       executor(resolve, reject);
@@ -45,27 +53,58 @@ export class Promise {
     }
   }
 
-  then(onFulfilled?: Function, onRejected?: Function) {
-      if(this.state === STATE.PENDING) {
-          onFulfilled && this.fulfilledFns.push(onFulfilled);
-          onRejected && this.rejectedFns.push(onRejected);
+  then(onFulfilled?: (res: any) => any, onRejected?: (res: any) => any): Promise { // then只是注册回调，等到resolve或reject的执行
+    // onFulfilled && (this.onFulfilled = onFulfilled);
+    // onRejected && (this.onRejected = onRejected);
+    // return new MyPromise((resolve, reject) => {
+    //   resolve(this.onFulfilled())
+    // })
+    return new Promise((resolve, reject) => {
+      if (onFulfilled) {
+        this.onFulfilled = function () {
+          try {
+            const newValue = onFulfilled(this.value);
+            resolve(newValue);
+          } catch (error) {
+            reject(error);
+          }
+        }
       }
+      if (onRejected) {
+        this.onRejected = function () {
+          try {
+            const newValue = onRejected(this.reason);
+            resolve(newValue);
+          } catch (error) {
+            reject(error)
+          }
+        }
+      }
+    })
+
   }
 }
 
 const p = new Promise((resolve, reject) => {
   console.log(1);
-  reject(4);
+  reject(4)
   console.log(2);
 });
 
 p.then(
-  (res: any) => {
+  (res) => {
     console.log(res);
   },
-  (res: any) => {
+  (res) => {
     console.log(res);
+    throw new Error('5')
   }
-);
+).then((res) => {
+  console.log(res);
+}, (res) => {
+  console.log(res);
+  console.log(6);
+  
+});
 
 console.log(3);
