@@ -20,26 +20,21 @@ enum STATE {
   PENDING = "pending",
 }
 
-function handlePromise(promise2: Promise, x: Promise, resolve: IResolve, reject: IReject) {
-    if (this.state === STATE.PENDING) {
-      try {
-        if (typeof x === "object" && typeof x.then === "function") {
-          x.then(
-            (y: any) => {
-              this.handlePromise(y, resolve, reject);
-            },
-            (r: any) => {
-              reject(r);
-            }
-          );
-        } else {
-          this.value = x;
-        }
-      } catch (err) {
-        reject(err);
-      }
+export function handlePromise(promise2: Promise, x: Promise, resolve: IResolve, reject: IReject) {
+  try {
+    if (typeof x === 'object' && x !== null && typeof x.then === 'function') {
+      x.then((y: any) => {
+        handlePromise(promise2, y, resolve, reject);
+      }, (r: any) => {
+        reject(r);
+      })
+    } else {
+      resolve(x);
     }
+  } catch (error) {
+    reject(error);
   }
+}
 
 export class Promise {
   value: any = undefined;
@@ -76,10 +71,10 @@ export class Promise {
         // 这样做可以确保同一个promise，不同的then在不同时机执行时，确保拿到同一个值
         try {
           setTimeout(() => {
-            if(onFulfilled) {
-                const x = onFulfilled(this.value); // p3是p1 then的回调的返回值
-                // 通过p1里onFulfilled返回的p3的状态，来决定p2的状态
-                handlePromise(promise2, x, resolve, reject);
+            if (onFulfilled) {
+              const x = onFulfilled(this.value); // p3是p1 then的回调的返回值
+              // 通过p1里onFulfilled返回的p3的状态，来决定p2的状态
+              handlePromise(promise2, x, resolve, reject);
             }
           });
         } catch (err) {
@@ -128,29 +123,55 @@ export class Promise {
   }
 }
 
-const p1 = new Promise((resolve, reject) => {
-  resolve(1);
+const p = new Promise((res, rej) => {
+  res(1)
+}).then(() => {
+  return new Promise((res, rej) => {
+    res(2)
+  }).then(
+    () => {
+      return new Promise((res, rej) => {
+        res(3)
+      })
+    },
+    () => {
+      console.log(3.5)
+      return new Promise((res, rej) => {
+        rej(4)
+      })
+    }
+  )
 })
 
-const p2 = p1.then(val => {
-    const p3 = new Promise((resolve, reject) => {
-        reject(val);
-    })
-    return p3;
-}, val => {
-    
-});
+p.then(res => {
+  console.log(res)
+}, res => {
+  console.log(res)
+})
 
-p2.then(
-  (res) => {
-    console.log(res);
-    console.log(2);
-  },
-  (res) => {
-    console.log(res);
-    console.log(3);
-  }
-);
+// const p1 = new Promise((resolve, reject) => {
+//   resolve(1);
+// })
+
+// const p2 = p1.then(val => {
+//   const p3 = new Promise((resolve, reject) => {
+//     resolve(val);
+//   })
+//   return p3;
+// }, val => {
+
+// });
+
+// p2.then(
+//   (res) => {
+//     console.log(res);
+//     console.log(2);
+//   },
+//   (res) => {
+//     console.log(res);
+//     console.log(3);
+//   }
+// );
 
 // Promise constructor 规范
 // 1. 构造函数里的代码为同步代码
