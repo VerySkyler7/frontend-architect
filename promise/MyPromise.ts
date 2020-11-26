@@ -189,3 +189,4 @@ p.then(
 // 情况2：如果它两返回的是promise(又名p1)，则then返回的promise(又名p2)的状态取决于p1的状态
 // 情况2-1：如果p1的状态是rejected，则p2的状态直接为rejected，无需关心p1的reason是否为一个promise，将p1的reason直接交个p2的reason即可
 // 情况2-2：如果p1的状态是fulfilled，则需要关心p1的value是否为一个promise，如果是则需要将p1的value通过递归一直钻取到一个普通值为止，最终将这个普通值赋值给p2的value。在递归钻取的过程中，只要发现promise有rejected的状态，则会把promise的的reason给到p2的reason，从而终止递归。
+// 情况3：如果p1里抛出了异常，则直接将异常交个p2的reason
