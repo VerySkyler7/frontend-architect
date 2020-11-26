@@ -20,14 +20,22 @@ enum STATE {
   PENDING = "pending",
 }
 
-export function handlePromise(promise2: Promise, x: Promise, resolve: IResolve, reject: IReject) {
+export function handlePromise(
+  promise2: Promise,
+  x: Promise,
+  resolve: IResolve,
+  reject: IReject
+) {
   try {
-    if (typeof x === 'object' && x !== null && typeof x.then === 'function') {
-      x.then((y: any) => {
-        handlePromise(promise2, y, resolve, reject);
-      }, (r: any) => {
-        reject(r);
-      })
+    if (typeof x === "object" && x !== null && typeof x.then === "function") {
+      x.then(
+        (y: any) => {
+          handlePromise(promise2, y, resolve, reject);
+        },
+        (r: any) => {
+          reject(r);
+        }
+      );
     } else {
       resolve(x);
     }
@@ -65,8 +73,10 @@ export class Promise {
     }
   }
 
-  then(onFulfilled?: IFThenCB, onRejected?: IFThenCB): Promise { // p1
-    const promise2 = new Promise((resolve, reject) => { // p2是p1的then的返回值
+  then(onFulfilled?: IFThenCB, onRejected?: IFThenCB): Promise {
+    // p1
+    const promise2 = new Promise((resolve, reject) => {
+      // p2是p1的then的返回值
       if (this.state === STATE.FULFILLED) {
         // 这样做可以确保同一个promise，不同的then在不同时机执行时，确保拿到同一个值
         try {
@@ -85,7 +95,11 @@ export class Promise {
       if (this.state === STATE.REJECTED) {
         try {
           setTimeout(() => {
-            onRejected && onRejected(this.reason);
+            if (onRejected) {
+              const x = onRejected(this.reason); // p3是p1 then的回调的返回值
+              // 通过p1里onFulfilled返回的p3的状态，来决定p2的状态
+              handlePromise(promise2, x, resolve, reject);
+            }
           });
         } catch (err) {
           reject(err);
@@ -123,55 +137,33 @@ export class Promise {
   }
 }
 
-const p = new Promise((res, rej) => {
-  res(1)
-}).then(() => {
-  return new Promise((res, rej) => {
-    res(2)
-  }).then(
-    () => {
-      return new Promise((res, rej) => {
-        res(3)
-      })
-    },
-    () => {
-      console.log(3.5)
-      return new Promise((res, rej) => {
-        rej(4)
-      })
-    }
-  )
-})
+var p = new Promise((res, rej) => {
+  rej(1);
+}).then(
+  () => {
+    return new Promise((res, rej) => {
+      res(2)
+    });
+  },
+  () => {
+    return new Promise((res, rej) => {
+      res(new Promise((res, rej) => {
+        rej(3);
+      }));
+    });
+  }
+);
 
-p.then(res => {
-  console.log(res)
-}, res => {
-  console.log(res)
-})
-
-// const p1 = new Promise((resolve, reject) => {
-//   resolve(1);
-// })
-
-// const p2 = p1.then(val => {
-//   const p3 = new Promise((resolve, reject) => {
-//     resolve(val);
-//   })
-//   return p3;
-// }, val => {
-
-// });
-
-// p2.then(
-//   (res) => {
-//     console.log(res);
-//     console.log(2);
-//   },
-//   (res) => {
-//     console.log(res);
-//     console.log(3);
-//   }
-// );
+p.then(
+  (res) => {
+    console.log(res);
+    console.log(4);
+  },
+  (res) => {
+    console.log(res);
+    console.log(5);
+  }
+);
 
 // Promise constructor 规范
 // 1. 构造函数里的代码为同步代码
@@ -192,3 +184,8 @@ p.then(res => {
 // 5. then里的onFulfilled和onRejected返回的值可以是包含promise的任意值
 
 // promise
+// 关于then里的onFulfilled和onRejected的返回值的问题
+// 情况1：如果它两返回的是普通值，则then返回的promise的状态为fullfilled，value为普通值。
+// 情况2：如果它两返回的是promise(又名p1)，则then返回的promise(又名p2)的状态取决于p1的状态
+// 情况2-1：如果p1的状态是rejected，则p2的状态直接为rejected，无需关心p1的reason是否为一个promise，将p1的reason直接交个p2的reason即可
+// 情况2-2：如果p1的状态是fulfilled，则需要关心p1的value是否为一个promise，如果是则需要将p1的value通过递归一直钻取到一个普通值为止，最终将这个普通值赋值给p2的value。在递归钻取的过程中，只要发现promise有rejected的状态，则会把promise的的reason给到p2的reason，从而终止递归。
