@@ -1,3 +1,11 @@
+// require的实现思路
+// 1. 用户调用require方法后，创建一个Module实例
+// 2. 使用fs读取文件，通过一个字符串函数将读取到的文件内容包裹起来
+// 3. 将字符串函数通过vm返回一个函数
+// 4. 执行vm返回的函数，通过call将函数内部的this指向module的exports
+// 5. 此时用户赋值给module.exports的代码会被执行
+// 6. 最终通过require将module.exports返回
+
 const path = require('path');
 const fs = require('fs');
 

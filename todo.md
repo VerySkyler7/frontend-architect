@@ -5,6 +5,7 @@
 - 搞懂async await如何成为的generator语法糖
 
 # promise
+- 实现resolve里的promise
 - 实现promise.all
 - 重写三遍promise a+实现
 - 实现promise.race
