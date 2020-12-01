@@ -1,3 +1,2 @@
-let path = require('path');
-console.log(__dirname);
-// console.log(path.dirname(__dirname,'a.js'));
+const path = require('path')
+console.log(require('./a/demo')('../../b'));
