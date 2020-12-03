@@ -11,3 +11,6 @@
 - 实现promise.race
 - 实现node的promisfy
 - 总结promise如何解决的异步并发、回调低于问题
+
+# async
+- 练习async面试题
