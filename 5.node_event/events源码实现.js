@@ -1,0 +1,49 @@
+function events () {
+	this.cbs = {};
+}
+
+events.prototype.on = function (name, cb) {
+    if(!this.cbs) this.cbs = {};
+    if(name !== 'newListener') {
+        this.emit('newListener', name);
+    }
+	if(!this.cbs[name]) {
+		this.cbs[name] = [];
+	}
+	const cbArr = this.cbs[name];
+	cbArr.push(cb);
+}
+
+events.prototype.emit = function (name, ...args) {
+	if(!this.cbs) this.cbs = {};
+	if(!this.cbs[name]) {
+		this.cbs[name] = [];
+	}
+	const cbArr = this.cbs[name];
+	cbArr.forEach(fn => fn(...args));
+}
+
+events.prototype.off = function (name, fn) {
+	if(!this.cbs) this.cbs = {};
+	const cbArr = this.cbs[name];
+	this.cbs[name] = cbArr.filter(item => item !== fn);
+}
+
+/**
+ * once的核心点
+ * 1. once是on和off的结合
+ * 2. 想让函数执行后立马删除，需要利用到aop编程，将fn的运行和off包裹在一个新的函数内，此时name将和新的函数绑定在一起
+ * 3. off关闭时，关闭的是新的函数，而不是fn
+ * 4. emit执行的参数，需要通过aop穿透给fn
+ */
+events.prototype.once = function (name, fn) {
+	const aop = (...args) => {
+		fn(...args);
+		this.off(name, aop);
+	}
+	this.on(name, aop);
+}
+
+module.exports = events;
+
+// 疑问 events原型是一个原始值，如何做到每个子类的实例单独生成一份对象

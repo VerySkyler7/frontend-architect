@@ -53,6 +53,10 @@ export class Promise {
 
   constructor(executor: IExecutor) {
     const resolve: IResolve = (value: any) => {
+      if (value instanceof Promise) {
+        return value.then(resolve, reject);
+      }
+
       if (this.state === STATE.PENDING) {
         this.state = STATE.FULFILLED;
         this.value = value;
@@ -133,35 +137,37 @@ export class Promise {
   }
 }
 
-var p = new Promise((res, rej) => {
-  rej(1);
-}).then(
-  () => {
-    return new Promise((res, rej) => {
+new Promise((resolve, rej) => {
+  resolve(new Promise((res) => {
       res(2);
-    });
-  },
-  () => {
-    return new Promise((res, rej) => {
-      res(
-        new Promise((res, rej) => {
-          rej(3);
-        })
-      );
-    });
-  }
-);
+  }));
+  resolve(1);
+}).then((val) => {
+  console.log(val);
+});
 
-p.then(
-  (res) => {
-    console.log(res);
-    console.log(4);
-  },
-  (res) => {
-    console.log(res);
-    console.log(5);
-  }
-);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Promise constructor 规范
 // 1. 构造函数里的代码为同步代码
