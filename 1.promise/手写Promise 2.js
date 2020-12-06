@@ -56,6 +56,7 @@ class Promise {
         }
 
         return new Promise((resolve, reject) => { // 实现then返回promise的链式效果
+          console.log(888888);
             if(this.state === STATE.Fulfilled) { // 代表executor里的resolve被同步执行
                 setTimeout(() => { // 实现then的异步效果
                     const rtnVal = onFulfilled(this.value);
@@ -87,11 +88,11 @@ class Promise {
 }
 
 const p = new Promise((resolve, reject) => {
-    resolve(new Promise((res, rej) => {
-        res(1)
-    }));
+    resolve()
 });
 
 p.then(val => {
     console.log(val);
-})
+}).then(val => val)
+.then(val => val);
+console.log(9999);
