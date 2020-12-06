@@ -9,17 +9,20 @@ util.inherits(Test, eventEmiter);
 
 t = new Test()
 
-t.on('newListener', (type) => {
-  console.log(type);
-  t.emit(type)
-})
-
-t.on('a', (a) => {
-  console.log(1);
-})
-
-console.log(2);
-
-t.on('a', (a) => {
+// t.on('newListener', (type) => {
+//   process.nextTick(()=> {
+//     t.emit(type)
+//   })
+// })
+a = (a) => {
   console.log(2);
-})  
+}
+t.once('a', a)
+
+t.off('a', a)
+
+t.emit('a')
+
+// t.on('a', (a) => {
+//   console.log(2);
+// })  
