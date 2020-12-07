@@ -113,8 +113,8 @@ export class Promise {
           // 此方式为aop 切片，将切片函数进行订阅，aop方便做一些额外的事
           setTimeout(() => {
             try {
-              const newValue = onFulfilled!(this.value);
-              resolve(newValue);
+              const x = onFulfilled!(this.value);
+              handlePromise(promise2, x, resolve, reject);
             } catch (error) {
               reject(error);
             }
@@ -123,8 +123,8 @@ export class Promise {
         this.onRejectedArr.push(() => {
           setTimeout(() => {
             try {
-              const newValue = onRejected!(this.reason);
-              resolve(newValue);
+              const x = onRejected!(this.reason);
+              handlePromise(promise2, x, resolve, reject);
             } catch (error) {
               reject(error);
             }
