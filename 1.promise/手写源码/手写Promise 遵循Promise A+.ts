@@ -150,25 +150,6 @@ new Promise((resolve, rej) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Promise constructor 规范
 // 1. 构造函数里的代码为同步代码
 // 2. promise的初始状态为pending，当触发回调resolve，状态变为fulfilled，当触发回调reject或抛出异常时，状态变为rejected
