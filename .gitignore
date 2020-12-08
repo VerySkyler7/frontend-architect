@@ -1,2 +1,4 @@
 tsconfig.json
 /promise/jiagouke3node
+node_modules
+_config.yml
