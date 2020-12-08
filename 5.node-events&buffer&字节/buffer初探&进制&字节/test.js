@@ -1,0 +1,1 @@
+console.log((02).toString(2)) // 10  将八进制的2转为2进制
