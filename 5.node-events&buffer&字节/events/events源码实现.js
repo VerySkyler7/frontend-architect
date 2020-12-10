@@ -48,5 +48,3 @@ events.prototype.once = function (name, fn) {
 }
 
 module.exports = events;
-
-// 疑问 events原型是一个原始值，如何做到每个子类的实例单独生成一份对象
