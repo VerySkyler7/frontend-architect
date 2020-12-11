@@ -37,3 +37,4 @@ fs.open(path.resolve(__dirname, 'a.txt'), 'r', (error, rfd) => {
         next(offsetRead, offsetWritten);
     })
 })
+

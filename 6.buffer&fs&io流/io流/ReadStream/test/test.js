@@ -1,17 +1,28 @@
 const fs = require('fs')
 const path = require('path')
-const buffer = Buffer.alloc(3)
-fs.open(path.resolve(__dirname, 'a.txt'), 'r', (err, fd) => {
-  fs.read(fd, buffer, 0, 3, 0, (err, bytesRead) => {
-    console.log(buffer);
-  })
+
+const res = fs.createReadStream(path.resolve(__dirname, 'a.txt'), {
+    flags: 'r',
+    autoClose: true,
+    highWaterMark: 1, // 分片读取  不填默认为64k
+    start: 0, // 开始读的位置
+    end: 1, // 读取结束的位置
 })
 
-// const res = fs.createReadStream(path.resolve(__dirname, 'a.txt'), {
-//     flags: 'r',
-//     highWaterMark: 1
-// })
+res.on('open', function(fd) {
+    console.log(fd);
+});
 
-// res.on('data', (chunk) => {
-//     console.log(chunk);
-// })
+const bufferArr = []
+
+res.on('data', function(data) {
+    bufferArr.push(data)
+})
+
+res.on('end', function() {
+    console.log(Buffer.concat(bufferArr).toString()); 
+})
+
+res.on('close', function(){
+    console.log('close');
+})
