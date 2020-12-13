@@ -9,9 +9,9 @@
       "request": "launch",
       "name": "启动程序",
       "skipFiles": [
-        // "<node_internals>/**"
+        "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/6.buffer&fs&io流/io流/ReadStream/test/test.js"
+      "program": "${workspaceFolder}/6.buffer&fs&io流/io流/WriteStream/WriteStream源码实现.js"
     }
   ]
 }
