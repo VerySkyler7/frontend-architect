@@ -29,8 +29,8 @@ let r = ws.write('1', (err) => {
 })
 console.log(r);
 // 重要
-// write方法时有序的，它是个异步方法，但是会按顺序执行，结果永远是1234。(重要)并且首次write是直接写入文件，之后的write是写入到内存中以链表的形式有序存放(？？这里是否不区分是哪个ws)。
-// 针对单个ws，每次write再上一个write的基础上进行追加，fs.write如果没标明写入的start，则每次是覆盖操作
+// write方法时有序的，它是个异步方法，但是会按顺序执行，结果永远是1234。(重要)并且首次write是直接写入文件，之后的write是写入到内存中以链表的形式有序存放
+// ws.write和fs.write的区别：每次ws.write再上一个write的基础上进行追加，fs.write如果没标明写入的start，则每次是覆盖操作
 r = ws.write('234');
 console.log(r);
 ```
@@ -62,7 +62,7 @@ function write() {
   }
 }
 
-ws.on('drain', () => { // 重要 当一个批次的ws.write的数据总长度达到highWaterMark并被消费后会触发drain(也是是ws.write返回false时，会触发该事件)
+ws.on('drain', () => { // 重要 决定触发drain  是由needDrain和是否清理完缓存  这两个因素一起决定 当缓存清理完后并且needDrain为true的时候才会触发drain
   console.log(i + '我达到了highWaterMark');
   write();
 })
