@@ -12,6 +12,7 @@ const EE = require('events')
  * 3. 调用_read方法，使用fd进行读取文件。由于open的回调为异步，_read方法第一次拿不到fd，因此可以once一下open方法，当emit open时，重新运行_read即可拿到fd。
  * 4. 根据highWaterMark、start、end、bytesRead递归读取文件
  * 5. 当bytesRead为0时，emit end >> fs.close >> emit close
+ * 6. 通过flowwing标识，控制_read方法的调用，实现pause和resume
  */
 class ReadStream extends EE{
     constructor(path, options = {}) {
@@ -24,8 +25,9 @@ class ReadStream extends EE{
         this.endcoding = options.endcoding
         this.highWaterMark = options.highWaterMark || 64 * 1024  // 默认是64k 性能应该是最优的
         this.offset = this.start; 
+        this.flowwing = true;
 
-        this.open()
+        this.open();
         this.on('newListener', (type) => {
             if(type === 'data') {
                 this._read()
@@ -44,6 +46,17 @@ class ReadStream extends EE{
         }
     }
 
+    pause() {
+      this.flowwing = false;
+    }
+
+    resume() {
+      if(!this.flowwing) {
+        this.flowwing = true;
+        this.on('data', ()=>{}); // 或者 this._read() 都可以
+      }
+    }
+
     open() {
         fs.open(this.path, this.flags, (err, fd) => { // open 为异步，属于事件环中的poll
             if(err) this.destroy();
@@ -57,15 +70,20 @@ class ReadStream extends EE{
             // 由于open为异步执行，_read无法拿到open回调中的fd，因此在_read中once一下open，然后重新执行_read
             return this.once('open', () => this._read())
         }
+
+        if(!this.flowwing) return;
+
         const buffer = Buffer.alloc(this.highWaterMark);
         // 如果end-start + 1 < hightWaterMark， 则取end-start+1作为fs.read里的length。加1是因为end-start比实际的length少1，所以要加1。
-        const howMouchToRead = this.end ? Math.min(this.highWaterMark, this.end - this.offset + 1) : this.highWaterMark;
+        const howMouchToRead = this.end === 0 ? Math.min(this.highWaterMark, this.end - this.offset + 1) : this.highWaterMark;
         fs.read(this.fd, buffer, 0, howMouchToRead, this.offset, (err, bytesRead) => {
             if(bytesRead > 0) {
                 // 由于highWaterMark和end由人为指定，可能会比实际文件的字节要长，因此需要根据betesRead进行截取
                  this.emit('data', buffer.slice(0, bytesRead))
                  this.offset += howMouchToRead;
-                 this._read();
+                 if(this.flowwing) {
+                   this._read();
+                 }
             }else {
                 this.emit('end');
                 this.destroy();
@@ -78,9 +96,9 @@ class ReadStream extends EE{
 const res = new ReadStream(path.resolve(__dirname, 'test/a.txt'), {
     flags: 'r',
     autoClose: true,
-    highWaterMark: 3, // 分片读取  不填默认为64k
+    highWaterMark: 1, // 分片读取  不填默认为64k
     start: 0, // 开始读的位置
-    end: 1, // 读取结束的位置
+    end: 4, // 读取结束的位置
 })
 
 res.on('open', function(fd) {
@@ -89,6 +107,8 @@ res.on('open', function(fd) {
 
 const bufferArr = []
 res.on('data', function(data) {
+  res.pause();
+  console.log(data);
     bufferArr.push(data);
 })
 
@@ -99,3 +119,7 @@ res.on('end', function() {
 res.on('close', function(){
     console.log('close');
 })
+
+setInterval(() => {
+  res.resume();
+}, 2000)
