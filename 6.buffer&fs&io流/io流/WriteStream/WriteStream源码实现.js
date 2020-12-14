@@ -19,11 +19,13 @@
  */
 
 const EE = require('events')
+const fs = require('fs')
+const path = require('path')
 
 class WriteStream extends EE {
-	constructor(path, options) {
+	constructor(path, options = {}) {
 		super();
-		this.path = path;
+        this.path = path;
 		this.flags = options.flags || 'w';
 		this.start = options.start || 0;
 		this.highWaterMark = options.highWaterMark || 1024 * 16;
@@ -135,45 +137,47 @@ class WriteStream extends EE {
 	}
 }
 
-// -------------------------------------------------------------
+module.exports = WriteStream;
 
-const fs = require('fs')
-const path = require('path')
+// --------------------------测试代码可打开注释-----------------------------------
 
-const ws = new WriteStream(path.resolve(__dirname, 'test/copy.md'), {
-	// const ws = fs.createWriteStream(path.resolve(__dirname, 'test/copy.md'), {
-	highWaterMark: 2,
-})
+// const fs = require('fs')
+// const path = require('path')
 
-let i = 0;
+// const ws = new WriteStream(path.resolve(__dirname, 'test/copy.md'), {
+// 	// const ws = fs.createWriteStream(path.resolve(__dirname, 'test/copy.md'), {
+// 	highWaterMark: 2,
+// })
 
-function write() {
-	while (i < 10) {
-		const res = ws.write(i++ + '');
-		if (!res) {
-			break;
-		}
-	}
-	if (i === 10) {
-		// 1. close事件，需要通过end方法进行触发
-		// 2. end方法需要写到write之后，end后不可以继续write
-		// 3. end后不会再触发drain事件，因此drain会被触发9次
-        ws.end('END');
-        // ws.write('8')
-	}
-}
+// let i = 0;
 
-ws.on('open', (fd) => {
-	console.log('fd', fd);
-})
+// function write() {
+// 	while (i < 10) {
+// 		const res = ws.write(i++ + '');
+// 		if (!res) {
+// 			break;
+// 		}
+// 	}
+// 	if (i === 10) {
+// 		// 1. close事件，需要通过end方法进行触发
+// 		// 2. end方法需要写到write之后，end后不可以继续write
+// 		// 3. end后不会再触发drain事件，因此drain会被触发9次
+//         ws.end('END');
+//         // ws.write('8')
+// 	}
+// }
 
-ws.on('drain', () => {
-	console.log(i + '我达到了highWaterMark并将ws.write的数据写入到文件中了');
-	write();
-})
+// ws.on('open', (fd) => {
+// 	console.log('fd', fd);
+// })
 
-write();
+// ws.on('drain', () => {
+// 	console.log(i + '我达到了highWaterMark并将ws.write的数据写入到文件中了');
+// 	write();
+// })
 
-ws.on('close', () => {
-	console.log('close');
-})
+// write();
+
+// ws.on('close', () => {
+// 	console.log('close');
+// })

@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const EE = require('events')
+const WriteStream = require('../WriteStream/WriteStream源码实现')
 
 /**
  * 实现思路
@@ -18,7 +19,7 @@ class ReadStream extends EE{
     constructor(path, options = {}) {
         super()
         this.path = path
-        this.flags = options.flags
+        this.flags = options.flags || 'r'
         this.start = options.start || 0
         this.end = options.end
         this.autoClose = options.autoClose || true
@@ -33,6 +34,22 @@ class ReadStream extends EE{
                 this._read()
             }
         })
+    }
+
+    pipe(ws) {
+        this.on('data', (chunk) => {
+            let r = ws.write(chunk);
+            if(!r) this.pause(); // 如果r为true代表未超过ws的highWaterMark，可以继续往内存里写入
+        })
+        
+        this.on('end', () => {
+            ws.end();
+        })
+        
+        ws.on('drain', () => {
+            rs.resume();
+        })
+        
     }
 
     destroy(err) {
@@ -92,34 +109,40 @@ class ReadStream extends EE{
     }
 }
 
+// -------------------------代码测试-------------------------------
+// const res = new ReadStream(path.resolve(__dirname, 'test/a.txt'), {
 // const res = fs.createReadStream(path.resolve(__dirname, 'test/a.txt'), {
-const res = new ReadStream(path.resolve(__dirname, 'test/a.txt'), {
-    flags: 'r',
-    autoClose: true,
-    highWaterMark: 1, // 分片读取  不填默认为64k
-    start: 0, // 开始读的位置
-    end: 4, // 读取结束的位置
-})
+//     flags: 'r',
+//     autoClose: true,
+//     highWaterMark: 1, // 分片读取  不填默认为64k
+//     start: 0, // 开始读的位置
+//     end: 4, // 读取结束的位置
+// })
 
-res.on('open', function(fd) {
-    console.log('fd', fd);
-});
+// res.on('open', function(fd) {
+//     console.log('fd', fd);
+// });
 
-const bufferArr = []
-res.on('data', function(data) {
-  res.pause();
-  console.log(data);
-    bufferArr.push(data);
-})
+// const bufferArr = []
+// res.on('data', function(data) {
+//   res.pause();
+//   console.log(data);
+//     bufferArr.push(data);
+// })
 
-res.on('end', function() {
-    console.log(Buffer.concat(bufferArr).toString()); 
-})
+// res.on('end', function() {
+//     console.log(Buffer.concat(bufferArr).toString()); 
+// })
 
-res.on('close', function(){
-    console.log('close');
-})
+// res.on('close', function(){
+//     console.log('close');
+// })
 
-setInterval(() => {
-  res.resume();
-}, 2000)
+// setInterval(() => {
+//   res.resume();
+// }, 2000)
+
+// -------------------------pipe测试-------------------------------
+// const res = new ReadStream(path.resolve(__dirname, 'test/a.txt'))
+// const ws = new WriteStream(path.resolve(__dirname, 'test/b.txt'))
+// res.pipe(ws);
