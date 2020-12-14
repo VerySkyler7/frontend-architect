@@ -37,7 +37,7 @@ class WriteStream extends EE {
 		this.offset = this.start; // 写入偏移量
 		this.needDrain = false;
 		this.caches = []; // 存放非首次写入的数据
-		this.isEnd = false; // 是否调用了end
+        this.isEnd = false; // 是否调用了end
 
 		this.open();
 	}
@@ -66,11 +66,17 @@ class WriteStream extends EE {
 	 * afer end will error
 	 */
 	end(chunk, encoding = this.encoding, cb = () => {}) {
+
+        // 由于其余的write为异步执行，在end中直接destroy会导致其余的write无法写完
+        const handleEnd = () => {
+            this.destroy();
+            cb();
+        }
+        
+        this.isEnd = true;
 		if(chunk) {
-			this.isEnd = true;
-			this.write(chunk, encoding, cb);
+			this.write(chunk, encoding, handleEnd, true);
 		}
-		this.once('end', this.destroy)
 	}
 
 	clearCache() {
@@ -90,8 +96,10 @@ class WriteStream extends EE {
 		}
 	}
 
-	write(chunk, encoding = this.encoding, cb = () => { }) {
-		let i = chunk
+	write(chunk, encoding = this.encoding, cb = () => {}, isEndWrite = false) {
+
+        if(this.isEnd && !isEndWrite) throw new Error('write can\'t after end');
+
 		chunk = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
 		this.len += chunk.length;
 		const result = this.len < this.highWaterMark;
@@ -150,7 +158,8 @@ function write() {
 		// 1. close事件，需要通过end方法进行触发
 		// 2. end方法需要写到write之后，end后不可以继续write
 		// 3. end后不会再触发drain事件，因此drain会被触发9次
-		ws.end('END');
+        ws.end('END');
+        // ws.write('8')
 	}
 }
 
