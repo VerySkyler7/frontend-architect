@@ -32,17 +32,23 @@ class WriteStream extends EE {
 		this.emitClose = options.emitClose || true;
 		this.autoClose = options.autoClose || true;
 
-		this.writting = false; // 是否正在写入，当未达到highWaterMark时，writting为true
+		this.writting = false; // writting为true代表非首次写入。如果drain之后，会重置该值
 		this.len = 0; // 代表准备写入的长度，写入后需要减少相应的长度
 		this.offset = this.start; // 写入偏移量
 		this.needDrain = false;
-		this.caches = [];
+		this.caches = []; // 存放非首次写入的数据
+		this.isEnd = false; // 是否调用了end
 
 		this.open();
 	}
 
-	destroy() {
-		this.emit('err', err);
+	destroy(err) {
+		if(err) this.emit('err', err);
+		if(typeof this.fd === 'number' && (this.autoClose || this.emitClose)) {
+			fs.close(this.fd, () => {
+				this.emit('close');
+			})
+		}
 	}
 
 	open() {
@@ -54,17 +60,17 @@ class WriteStream extends EE {
 	}
 
 	/**
-	 * end方法存在bug，再研究
+	 * 不触发drain 已实现
+	 * 触发关闭 已实现
+	 * 写入数据 存在bug
+	 * afer end will error
 	 */
 	end(chunk, encoding = this.encoding, cb = () => {}) {
 		if(chunk) {
+			this.isEnd = true;
 			this.write(chunk, encoding, cb);
 		}
-		fs.close(this.fd, () => {
-			if(this.autoClose || this.emitClose) {
-				this.emit('close');
-			}
-		})
+		this.once('end', this.destroy)
 	}
 
 	clearCache() {
@@ -85,10 +91,11 @@ class WriteStream extends EE {
 	}
 
 	write(chunk, encoding = this.encoding, cb = () => { }) {
+		let i = chunk
 		chunk = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
 		this.len += chunk.length;
 		const result = this.len < this.highWaterMark;
-		this.needDrain = !result; 
+		this.needDrain = this.isEnd ? !this.isEnd : !result; 
 
 		const clearCache = () => {
 			this.clearCache();
@@ -143,7 +150,7 @@ function write() {
 		// 1. close事件，需要通过end方法进行触发
 		// 2. end方法需要写到write之后，end后不可以继续write
 		// 3. end后不会再触发drain事件，因此drain会被触发9次
-		// ws.end('END');
+		ws.end('END');
 	}
 }
 
