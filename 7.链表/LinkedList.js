@@ -48,6 +48,7 @@ class LinkedList {
         let removedNode = null;
 
         if(index === 0) {
+            if(!this.head) return null;
             removedNode = this.head;
             this.head = this.head.next;
         } else {
@@ -73,11 +74,13 @@ class LinkedList {
 
 }
 
-let ll = new LinkedList()
-ll.add(0, 1)
-ll.add(0, 2)
-ll.add(1, 3)
+module.exports = LinkedList;
+
+// let ll = new LinkedList()
+// ll.add(0, 1)
+// ll.add(0, 2)
+// ll.add(1, 3)
 
 
 
-console.dir(ll, { depth: 1000 });
+// console.dir(ll, { depth: 1000 });
