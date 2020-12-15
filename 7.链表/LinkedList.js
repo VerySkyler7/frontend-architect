@@ -14,13 +14,13 @@ class LinkedList {
     }
 
     // 获取index所在节点
+    // 此方法的核心思想是找到自己的上一个节点的next
+    // 由于index 0前面没有节点，因此0作为初始值，不需要进入for循环
     _node(index) {
+        if(index > this.size) throw new Error('下标越界');
         let current = this.head;
-        if(!current) return current; // 越界判断
-
         for(let i = 0; i < index; i++) {
             current = current.next;
-            if(!current) return current; // 越界判断 此行和上一行调换位置会多循环一次，对结果没影响
         }
         return current;
     }
@@ -44,8 +44,31 @@ class LinkedList {
         this.size += 1;
     }
 
-    remove() {
+    remove(index) {
+        let removedNode = null;
 
+        if(index === 0) {
+            removedNode = this.head;
+            this.head = this.head.next;
+        } else {
+            const prevNode = this._node(index - 1);
+            removedNode = prevNode.next;
+            prevNode.next = prevNode.next.next;
+        }
+
+        if(!removedNode) return;
+
+        this.size--;
+        return removedNode.el;
+    }
+
+    set(index, el) {
+        const curNode = this._node(index);
+        curNode.el = el;
+    }
+
+    get(index) {
+        return this._node(index);
     }
 
 }
@@ -54,5 +77,7 @@ let ll = new LinkedList()
 ll.add(0, 1)
 ll.add(0, 2)
 ll.add(1, 3)
+
+
 
 console.dir(ll, { depth: 1000 });
