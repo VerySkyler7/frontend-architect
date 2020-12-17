@@ -104,6 +104,17 @@ class LinkedList {
         return res;
     }
 
+    reverse00(head) { // 递归反转  1 2 3
+        if(head.next == null || head == null) return;
+        let cache2 = head.next;
+        let cache3 = head.next.next;
+        cache2.next = head; // 2的next指向1
+        head.next = cache3;
+
+        this.reverse00(head);
+        return cache2;
+    }
+
     reverse1(){ // 待理解
         let head = this.head;
         if(head == null || head.next == null) return head;
@@ -124,10 +135,11 @@ const ll = new LinkedList
 ll.add(1)
 ll.add(2)
 ll.add(3)
-ll.add(4)
 
-const res = ll.reverse0(ll.head)
-console.dir(res, { depth: 1000 });
+// const res = ll.reverse0(ll.head)
+// console.dir(res, { depth: 1000 });
+
+console.dir(ll.reverse00(ll.head), { depth: 1000 }) 
 
 // const newLL = ll.reverse1()
 
