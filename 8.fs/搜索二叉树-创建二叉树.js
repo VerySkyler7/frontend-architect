@@ -21,3 +21,7 @@
 // 小于root同理
 // 结束循环后，即可拿到parent和比较的结果，从而决定当前元素添加到parent的哪个节点上
 
+// 4. 自定义比较器
+// 将用户写的函数传入到tree实例中，代替到tree中原有的compare即可
+
+// http://zhufengpeixun.com/jg-vue/node/tree.html#三-二叉搜索树
