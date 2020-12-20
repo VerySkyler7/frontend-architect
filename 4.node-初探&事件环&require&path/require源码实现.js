@@ -52,6 +52,3 @@ function req(id) {
 }
 
 const r = req('./a/demo.js')
-
-// 疑问
-// 1. 源码里path.resolve应该是以resolveFilePath方法所在的文件为基准寻找的绝对路径,为何可以正常运行?
