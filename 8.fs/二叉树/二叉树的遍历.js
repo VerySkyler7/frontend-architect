@@ -6,3 +6,18 @@
 // 3. 后序遍历 左侧叶子节点>>右侧叶子节点>>根节点
 
 // 4. 层序遍历 从顶层一层一层遍历
+
+const Tree = require('./搜索二叉树-创建二叉树')
+
+const tree = new Tree((parent, child) => { // Tree内部的逻辑 如果返回true则把child放到parent.left
+    return parent.id > child.id;
+});
+tree.add({ id: 50 })
+tree.add({ id: 25 });
+tree.add({ id: 75 });
+tree.add({ id: 20 });
+tree.add({ id: 30 });
+tree.add({ id: 65 });
+tree.add({ id: 85 });
+
+tree.traverse();

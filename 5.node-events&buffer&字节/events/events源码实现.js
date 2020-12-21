@@ -1,33 +1,30 @@
-function events () {
+function events() {
 	this.cbs = {};
 }
 
 events.prototype.on = function (name, cb) {
-    if(!this.cbs) this.cbs = {};
-    if(!this.cbs[name]) this.cbs[name] = [];
-    if(name !== 'newListener') {
-        this.emit('newListener', name);
-    }
+	if (!this.cbs) this.cbs = {};
+	if (!this.cbs[name]) this.cbs[name] = [];
+	if (name !== 'newListener') {
+		this.emit('newListener', name);
+	}
 	const cbArr = this.cbs[name];
 	cbArr.push(cb);
 }
 
 events.prototype.emit = function (name, ...args) {
-	if(!this.cbs) this.cbs = {};
-	if(!this.cbs[name]) this.cbs[name] = [];
-  const cbArr = this.cbs[name];
+	if (!this.cbs) this.cbs = {};
+	if (!this.cbs[name]) this.cbs[name] = [];
+	const cbArr = this.cbs[name];
 	cbArr.forEach(fn => fn(...args));
 }
 
 events.prototype.off = function (name, fn) {
-  if(!this.cbs) this.cbs = {};
-  if(!this.cbs[name]) this.cbs[name] = [];
-  const cbArr = this.cbs[name];
-  // 要把不需要关闭的过滤出来
-  
-  this.cbs[name] = cbArr.filter(item => {
-    (item !== fn && item.l !== fn)
-  });
+	if (!this.cbs) this.cbs = {};
+	if (!this.cbs[name]) this.cbs[name] = [];
+	const cbArr = this.cbs[name];
+	// 要把不需要关闭的过滤出来
+	this.cbs[name] = cbArr.filter(item => (item !== fn && item.l !== fn)); // item !== fn && item.l !== fn 代表这两条件都得满足才不会被删除掉，只要满足一个条件，就会被删除掉
 }
 
 /**
@@ -41,9 +38,9 @@ events.prototype.off = function (name, fn) {
 events.prototype.once = function (name, fn) {
 	const aop = (...args) => {
 		fn(...args);
-    this.off(name, aop);
-  }
-  aop.l = fn;
+		this.off(name, aop);
+	}
+	aop.l = fn;
 	this.on(name, aop);
 }
 
