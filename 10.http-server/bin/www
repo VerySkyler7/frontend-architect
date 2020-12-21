@@ -1,0 +1,51 @@
+#! /usr/bin/env node
+const program = require('commander');
+const chalk = require('chalk');
+const config = require('./config');
+// const Server = require('../src/server')
+program.name('my-httpserver'); // 修改命令行中的www为my-httpserver
+// 写服务：
+// a.端口号 b.能指定目录 c.文件是否需要缓存 d......
+
+const defaultConfig = {};
+const usageList = [];
+
+// [[key,value],[key,value]]
+Object.entries(config).forEach(([key, value]) => { // 解构赋值 es5 中的api
+    defaultConfig[key] = value.default;
+    usageList.push(value.usage)
+    // 1. 将默认命令配置注入给命令行管家
+    program.option(value.option, value.descriptor); // 执行my-httpserver --help后即可查看到相关命令描述
+});
+
+// 3. 监听用户输入的命令，做一些优化操作
+program.on('--help',function () { 
+    console.log('Examples:');
+    usageList.forEach(line=>{
+        console.log(`  ${chalk.green(line)} `); // (可忽略)\r回车(只是换行 return) \n换行(多一个空白行 newline)
+    })         
+});
+
+program.parse(process.argv); // 解析用户执行时的参数
+
+// 2 根据用户的参数 和 默认值 做合并
+function mergeOtions(defaultConfig,_program){
+    const options = {}; // 过滤掉program中没有用的参数
+    for(let key in defaultConfig){
+        if(!(key in _program)){ // 命令行输入的参数会成为program的属性值
+            options[key] = defaultConfig[key]
+        }else{
+            // 此处可以做一些_program的校验 是否符合我的预期
+            options[key] = _program[key]
+        }
+    }
+    return options
+}
+let options = mergeOtions(defaultConfig,program);
+
+// 获取用户的参数来创建一个服务并且启动
+// let server = new Server(options);
+// server.start();
+
+// node 写的工具可以用node模块
+// 前端代码不能使用核心模块
