@@ -37,7 +37,7 @@ const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'text/html;charset=utf-8'); // 需要设置类型和编码，浏览器默认是gbk，没有utf-8会是乱码，必须要有-，否则ie会有问题
 
     // -------------------响应体----------------------
-    // res是一个可写流
+    // res是一个可写流 
     res.write('哈喽');
     res.end('end');
 
@@ -62,12 +62,20 @@ server.on('request', (req, res) => {
 })
 
 let port = 3000;
-server.listen(port, (err) => {
+server.listen(port, () => {
     console.log('server has started');
-    // if(err && err.errno === 'EADDRINUSE') server.listen(++port);
 })
 
 // 解决多端口启动问题
 server.on('error', (err) => {
     if (err.errno === 'EADDRINUSE') server.listen(++port);
 })
+
+// 开发时 我们可以使用一些工具来监听代码变化 实现自动重启的功能 
+// supervisor (nodemon) (pm2)
+// npm install nodemon -g
+// nodemon 1.js 监控文件变化
+
+// curl -v -d "" -X POST http://www.baidu.com
+
+
