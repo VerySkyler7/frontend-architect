@@ -1,13 +1,13 @@
 {
-  "name": "14.vue2",
+  "name": "vue2yuanma",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "rollup.config.js",
   "scripts": {
     "rollup -c代表使用rollup.config.js的配置": "",
-    "build:dev": "rollup -c", 
+    "build:dev": "rollup -c",
     "通过cross-env ENV=development指定了环境变量ENV的值。-w代表--watch，修改代码时可以实时打包": "",
-    "serve": "cross-env ENV=development rollup -c -w", 
+    "serve": "cross-env ENV=development rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
