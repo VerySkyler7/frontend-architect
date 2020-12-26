@@ -1,0 +1,24 @@
+{
+  "name": "14.vue2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "rollup -c代表使用rollup.config.js的配置": "",
+    "build:dev": "rollup -c", 
+    "通过cross-env ENV=development指定了环境变量ENV的值。-w代表--watch，修改代码时可以实时打包": "",
+    "serve": "cross-env ENV=development rollup -c -w", 
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "cross-env": "^7.0.3",
+    "rollup": "^2.35.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-serve": "^1.1.0"
+  }
+}
