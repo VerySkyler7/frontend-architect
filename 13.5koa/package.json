@@ -1,7 +1,8 @@
 {
-  "name": "12.express",
+  "name": "13.5koa",
   "version": "1.0.0",
-  "main": "express用法.js",
+  "description": "",
+  "main": "test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -9,8 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
-  },
-  "devDependencies": {},
-  "description": ""
+    "koa": "^2.13.0"
+  }
 }

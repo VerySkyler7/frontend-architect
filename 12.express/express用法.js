@@ -1,6 +1,6 @@
 const express = require('express')
 
-const server = express()
+const server = express();
 
 // 路由的用法
 // server.get('/', (req, res, next) => { // 1 这些cb函数为路由中间件，在res.end之前可以分步做很多其他的事
