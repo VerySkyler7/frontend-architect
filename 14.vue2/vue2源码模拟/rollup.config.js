@@ -18,7 +18,7 @@ export default {
         babel({
             exclude: "node_modules/**", // 不对node_modules下的任何文件进行转义
         }),
-        process.env.ENV  === 'development' ? serve({ // 静态服务器的配置
+        process.env.ENV === 'development' ? serve({ // 静态服务器的配置
             open: true, // 启动后是否自动打开浏览器
             openPage: '/public/index.html', // 自动打开的页面
             port: 3000, // 占用的端口号
