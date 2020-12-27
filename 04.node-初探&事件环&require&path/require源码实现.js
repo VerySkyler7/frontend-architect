@@ -7,6 +7,23 @@
 // 6. 最终通过require将module.exports返回
 // 重点：使用require时，module.exports和exports指向的是同一个引用地址，最终使用的是module.exports,因此给exports重新赋值一个引用值时，不会对module.exports产生影响
 
+
+// 额外：eval new Function() vm.runInThisContext的区别
+// 1. eval没有沙箱机制，
+let a = 1;
+eval('console.log(a)'); // 1
+
+// 2. new Function()具有沙箱机制(但可以获取全局global或window的变量)
+// 不可以直接运行字符串，需要运行fn
+let b = 2;
+let fn = new Function('console.log(b)');
+fn(); // 报错 b is not defined
+
+// 3. vm.runInThisContext 具有沙箱机制(但可以获取全局global的变量)
+// 可以直接执行字符串代码
+let c = 1;
+vm.runInThisContext('console.log(c)'); //报错 b is not defined
+
 const path = require('path');
 const fs = require('fs');
 
@@ -51,5 +68,3 @@ Module._load = function (id) {
 function req(id) { 
   Module._load(id);
 }
-
-const r = req('./a/demo.js')
