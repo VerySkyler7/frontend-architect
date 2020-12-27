@@ -5,6 +5,7 @@
 // 4. 执行vm返回的函数，通过call将函数内部的this指向module的exports
 // 5. 此时用户赋值给module.exports的代码会被执行
 // 6. 最终通过require将module.exports返回
+// 重点：使用require时，module.exports和exports指向的是同一个引用地址，最终使用的是module.exports,因此给exports重新赋值一个引用值时，不会对module.exports产生影响
 
 const path = require('path');
 const fs = require('fs');
