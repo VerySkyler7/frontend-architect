@@ -17,6 +17,7 @@
 //  3. poll io操作的回调，除了timer、io关闭操作，其余的回调基本都放在这里
 //  4. check 用于存放setImmediate的回调
 //  5. onClose，用于存放关闭的回调如http、socket的关闭
+//  6. 当所有的队列都被清空完后，libuv会将loop阻塞在poll阶段，用于监听新的io回调
 
 // 疑问：为什么setTimeout的回调不属于io，但是回调里的setImmediate和setTimeout的执行顺序也是确定的
 
@@ -40,5 +41,5 @@ function timer() {
     
 }
 
-timer(); // 执行顺序 123是确定的的 45要根据机器的性能，性能越差，时间越短，timer越可能提前执行。目前设置7毫秒，处于两种可能性之间。用于和下面的代码做对比
+// timer(); // 执行顺序 123是确定的的 45要根据机器的性能，性能越差，时间越短，timer越可能提前执行。目前设置7毫秒，处于两种可能性之间。用于和下面的代码做对比
 // setTimeout(timer); // 执行顺序永远是 12345
