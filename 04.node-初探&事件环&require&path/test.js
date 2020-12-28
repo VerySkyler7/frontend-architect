@@ -1,6 +1,6 @@
 // const path = require('path')
-const t = require('./a/demo')
-console.log(t);
+// const t = require('./a/demo')
+// console.log(t);
 
 // setTimeout(()=>{
 //     console.log(4);
@@ -14,3 +14,7 @@ console.log(t);
 // });
 
 // console.log(1);
+
+console.log(process.cwd());
+
+process.nextTick();
