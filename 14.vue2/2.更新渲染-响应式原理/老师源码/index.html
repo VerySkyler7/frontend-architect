@@ -10,7 +10,7 @@
 <body>
     <!-- 'hello' + arr + 'world' -->
     <div id="app">
-        {{name}}
+        {{arr}}
     </div>
     <script src="dist/vue.js"></script>
     <script>
@@ -19,30 +19,31 @@
             data() {
                 //this = vm
                 return {
-                    name: 'zf',
+                    // name: 'zf',
                     // age: 11,
                     // obj: {a:{a:1}},// 最外层的数组进行了依赖收集  JSON.stringify()
-                    arr:[[]]
+                    arr:{a:1}
                 }
             }
         });
         vm.$mount('#app');
 
         // 数据变化需要影响视图 , 数据和页面渲染关联起来
-        setTimeout(() => {
-            vm.name = 'hello';
-            vm.name = 'zf';
-            vm.name = 'hello';
-            vm.name = 123;
-
-            vm.$nextTick(()=>{
-                console.log(vm.$el)
-            })
-            // vm._update(vm._render()); // 重新调用render方法产生虚拟dom， 目前还没有diff
-        }, 1000);
         // setTimeout(() => {
-        //    vm.obj.a.a = 100;
+        //     vm.name = 'hello';
+        //     vm.name = 'zf';
+        //     vm.name = 'hello';
+        //     vm.name = 123;
+
+        //     vm.$nextTick(()=>{
+        //         console.log(vm.$el)
+        //     })
+        //     // vm._update(vm._render()); // 重新调用render方法产生虚拟dom， 目前还没有diff
         // }, 1000);
+        setTimeout(() => {
+           arr = vm.arr
+            arr.a = 2
+        }, 1000);
     </script>
 
 
