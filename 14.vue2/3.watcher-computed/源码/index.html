@@ -22,20 +22,21 @@
         const vm = new Vue({ // watcher 渲染watcher
             el: '#app',
             data: {
-                name: 'zf',
-                age: 100,
+                // name: 'zf',
+                // age: {
+                //     n: 1
+                // },
                 firstName: 'zhu',
                 lastName: 'feng'
             },
-            computed: { // Object.defineProperty => getter
-                fullName: {
-                    get() {
-                        console.log('oooo')
-                        return this.firstName + this.lastName
-                    },
-                    set(newValue) {
-                        console.log(newValue);
-                    }
+            computed: {
+                fullName() {
+                    return this.firstName + this.lastName;
+                }
+            },
+            methods: {
+                a() {
+                    console.log('aaaa');
                 }
             },
             watch: { // 用户watcher
@@ -53,17 +54,14 @@
                 // 'age.n'(newVal, oldVal) {
                 //     console.log(newVal, oldVal)
                 // },
+                // name: 'a'
             }
         });
 
-
-        console.log(vm.fullName)
-        console.log(vm.fullName)
         setTimeout(() => {
-            vm.firstName = 'zs'
-
-            console.log(vm.fullName)
-
+            // vm.name = '0000';
+            vm.firstName = 'a';
+            // vm.lastName = 'a';
         }, 1000);
 
         // 计算属性默认不执行 =》 Object.defineProperty => getter

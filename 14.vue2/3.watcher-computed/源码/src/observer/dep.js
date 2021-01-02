@@ -24,10 +24,11 @@ Dep.target = null; // 一份
 let stack = [];
 
 export function pushTarget(watcher) {
+    debugger
     Dep.target = watcher;
     stack.push(watcher);
     console.log(stack)
-   
+   console.log(watcher.exprOrFn);
 }
 export function popTarget() {
     stack.pop();

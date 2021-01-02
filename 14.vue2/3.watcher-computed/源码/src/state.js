@@ -114,7 +114,7 @@ function createComputedGetter(key) {
 function defineComputed(vm, key, userDef) {
     let sharedProperty = {};
     if (typeof userDef == 'function') {
-        sharedProperty.get = userDef;
+        sharedProperty.get = createComputedGetter(key);
     } else {
         sharedProperty.get = createComputedGetter(key);
         sharedProperty.set = userDef.set ;
