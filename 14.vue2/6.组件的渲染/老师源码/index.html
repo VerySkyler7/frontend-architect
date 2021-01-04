@@ -19,6 +19,7 @@
 
     <!-- render -> vnode -> 真实dom -->
     <div id="app">
+        {{test1}}
         <my-button></my-button>
     </div>
     <!-- <script src="dist/vue.js"></script> -->
@@ -52,10 +53,28 @@
                         console.log('mounted', 'child')
                     },
                 }
+            },
+            // 测试执行顺序
+            data: {
+                a: 1,
+                b: 2
+            },
+            computed: {
+                test1(){
+                    debugger
+                    console.log(111,'computed');
+                    return this.a + this.b
+                }
+            },
+            watch: {
+                a() {
+                    debugger
+                    console.log(222, 'watch');
+                }
             }
         });
 
-
+        vm.a = 2
 
         // 内部会将钩子函数 回调函数， 存到一个数组里，当到达某个阶段后依次执行 
 
