@@ -1,0 +1,80 @@
+<!-- webComponent浏览器自带的组件化 -->
+<!-- 缺点兼容性不好，手机基本都支持，IE和火狐目前还不支持 -->
+<!-- 优点：纯天然、性能高 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* root表示根，与html相同，但比html优先级高 */
+        :root {
+            --text-color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 组件的引用 -->
+    <skyler-button type="primary">skyler</skyler-button>
+    <skyler-button>skyler</skyler-button>
+
+    <!-- template模板，不会办渲染 -->
+    <template id="btnTemplate">
+        <button class="btn">
+            <slot>default button</slot>
+        </button>
+    </template>
+
+    <script>
+        class Skyler extends HTMLElement {
+            constructor() {
+                super();
+                console.log(this); // 打印出来的为 <skyler-button>skyler</skyler-button>
+                const shadow = this.attachShadow({ mode: 'open' }); // 给当前元素挂载一个影子dom，影子dom无法通过外接直接修改其内容包括样式
+                const btnTmp = document.getElementById("btnTemplate"); // 获取模板
+                const cloneTemp = btnTmp.content.cloneNode(true); // 复制一份，由于dom具有可移动性，如果直接移动会被删除
+                const style = document.createElement('style');
+
+                const types = {
+                    'primary': {
+                        backgroundColor: '#409eff',
+                        color: '#fff'
+                    },
+                    'default': {
+                        backgroundColor: '#c8c9cc',
+                        color: '#fff'
+                    }
+                }
+
+                const btnType = this.getAttribute('type') || 'default';
+
+                // css3变量，如果外界定义了--text-color则使用--text-color，没定义则使用后面的值
+                style.innerHTML = `
+                                    .btn {
+                                        outline:none;
+                                        border:none;
+                                        border-radius:4px;
+                                        display:inline-block;
+                                        cursor:pointer;
+                                        padding:6px 20px;
+                                        background:${types[btnType].backgroundColor};
+                                        color:var(--text-color,${types[btnType].color}); 
+                                    }
+                                `;
+
+                shadow.appendChild(style);
+                shadow.appendChild(cloneTemp);
+
+            }
+        }
+
+        // 代表skyler-button元素是由Skyler构建出来的
+        // 标签名必须适用-隔开，表示自定义标签，css变量也同样要使用-
+        window.customElements.define('skyler-button', Skyler);
+    </script>
+</body>
+
+</html>
