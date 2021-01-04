@@ -9,9 +9,7 @@ import Dep from './dep'
 // 如果给对象新增一个属性不会触发视图更新  (给对象本身也增加一个dep，dep中存watcher，如果增加一个属性后，我就手动的触发watcher的更新)
 class Observer { 
     constructor(data) { // 对对象中的所有属性 进行劫持
-
         this.dep = new Dep(); // 数据可能是数组或者对象
-
         Object.defineProperty(data,'__ob__',{
             value:this,
             enumerable:false // 不可枚举的
@@ -64,6 +62,7 @@ function defineReactive(data,key,value){ // value有可能是对象
         get(){
             // 取值时我希望将watcher和dep 对应起来
             if(Dep.target){ // 此值是在模板中取值的
+                console.log(key, value);
                 dep.depend() // 让dep记住watcher
                 if(childOb){ // 可能是数组 可能是对象，对象也要收集依赖，后续写$set方法时需要触发他自己的更新操作
                     childOb.dep.depend(); // 就是让数组和对象也记录watcher

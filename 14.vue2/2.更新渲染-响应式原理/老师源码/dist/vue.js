@@ -578,6 +578,7 @@
           // 取值时我希望将watcher和dep 对应起来
           if (Dep.target) {
             // 此值是在模板中取值的
+            console.log(key, value);
             dep.depend(); // 让dep记住watcher
 
             if (childOb) {
