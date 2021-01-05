@@ -21,18 +21,21 @@
     <div id="app">
         <my-button></my-button>
     </div>
-    <!-- <script src="dist/vue.js"></script> -->
-    <script src="node_modules/vue/dist/vue.js"></script>
+    <script src="dist/vue.js"></script>
+    <!-- <script src="node_modules/vue/dist/vue.js"></script> -->
     <script>
         Vue.component("my-button", {
-            template: "<button>heelo</hello>"
-        })
+            template: "<button>heelo</button>"
+        });
 
-        new Vue({
+        const vm = new Vue({
             el: "#app",
             components: {
                 "my-button": {
-                    template: "<button>world</world>"
+                    template: "<button>world</button>",
+                    beforeCreate(){
+                        console.log(22222);
+                    }
                 }
             }
         })

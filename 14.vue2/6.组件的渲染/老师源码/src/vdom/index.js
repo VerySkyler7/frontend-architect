@@ -1,5 +1,6 @@
 import { isObject, isReservedTag } from "../utils";
 
+// createElement是给_c创建虚拟dom使用的
 export function createElement(vm, tag, data = {}, ...children) {
 
     // 如果tag是组件 应该渲染一个组件的vnode
