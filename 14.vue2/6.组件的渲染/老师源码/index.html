@@ -19,83 +19,23 @@
 
     <!-- render -> vnode -> 真实dom -->
     <div id="app">
-        {{test1}}
         <my-button></my-button>
     </div>
     <!-- <script src="dist/vue.js"></script> -->
     <script src="node_modules/vue/dist/vue.js"></script>
     <script>
-        Vue.component("my-button", { // Vue.options.components = {"my-button":fn}
-            template: '<button>hello</button>'
-        });
-
-        Vue.mixin({
-            beforeCreate() {
-                console.log(1111);
-            }
+        Vue.component("my-button", {
+            template: "<button>heelo</hello>"
         })
 
-        const vm = new Vue({ // .__proto__
-            el: '#app',
-            beforeCreate() {
-                console.log('beforeCreate', '222')
-            },
-            mounted() {
-                console.log('mounted', 'parent')
-            },
+        new Vue({
+            el: "#app",
             components: {
                 "my-button": {
-                    template: '<button>world</button>',
-                    beforeCreate() {
-                        console.log('beforeCreate', '333');
-                    },
-                    mounted() {
-                        console.log('mounted', 'child')
-                    },
-                }
-            },
-            // 测试执行顺序
-            data: {
-                a: 1,
-                b: 2
-            },
-            computed: {
-                test1(){
-                    debugger
-                    console.log(111,'computed');
-                    return this.a + this.b
-                }
-            },
-            watch: {
-                a() {
-                    debugger
-                    console.log(222, 'watch');
+                    template: "<button>world</world>"
                 }
             }
-        });
-
-        vm.a = 2
-
-        // 内部会将钩子函数 回调函数， 存到一个数组里，当到达某个阶段后依次执行 
-
-        // Vue.options = {beforeCreate:[fn1,fn2]}
-
-        // Vue.mixin({
-        //     beforeCreate(){
-        //         console.log('before create1')
-        //     }
-        // })
-        // Vue.mixin({
-        //     beforeCreate(){
-        //         console.log('before create2')
-        //     }
-        // })
-        // const vm = new Vue({ // vm.$options.beforeCreate:[fn1,fn2,fn3]
-        //     el: '#app',
-        //     beforeCreate(){
-        //         console.log('before create3')
-        //     }
-        // });
+        })
     </script>
 
 </body>
