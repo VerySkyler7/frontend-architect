@@ -1369,6 +1369,7 @@
   var render1 = compileToFunction(oldTemplate);
   var oldVnode = render1.call(vm1); // 虚拟dom
 
+  debugger;
   document.body.appendChild(createElm(oldVnode)); // v-if   v-else
 
   var newTemplate = "<div >\n<li key=\"D\">D</li>\n<li key=\"A\">A</li>\n<li key=\"B\">B</li>\n<li key=\"C\">C</li>\n</div>";

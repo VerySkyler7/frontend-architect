@@ -28,16 +28,18 @@
             template: "<button>heelo</button>"
         });
 
+        Vue.mixin(<my-button />)
+
         const vm = new Vue({
             el: "#app",
-            components: {
-                "my-button": {
-                    template: "<button>world</button>",
-                    beforeCreate(){
-                        console.log(22222);
-                    }
-                }
-            }
+            // components: {
+            //     "my-button": {
+            //         template: "<button>world</button>",
+            //         beforeCreate(){
+            //             console.log(22222);
+            //         }
+            //     }
+            // }
         })
     </script>
 

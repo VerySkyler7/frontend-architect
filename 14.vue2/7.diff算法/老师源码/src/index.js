@@ -32,6 +32,7 @@ let oldTemplate = `<div>
 let vm1 = new Vue({ data: { message: 'hello world' } })
 const render1 = compileToFunction(oldTemplate)
 const oldVnode = render1.call(vm1); // 虚拟dom
+debugger
 document.body.appendChild(createElm(oldVnode));
 
 // v-if   v-else
