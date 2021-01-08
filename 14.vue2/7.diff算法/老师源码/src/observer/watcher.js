@@ -74,6 +74,7 @@ class Watcher {
             this.deps.push(dep);
             dep.addSub(this)
         }
+        
     }
     evaluate(){
         this.dirty = false; // 为false表示取过值了
