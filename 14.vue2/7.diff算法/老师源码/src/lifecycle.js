@@ -3,11 +3,16 @@ import { nextTick } from "./utils";
 import { patch } from "./vdom/patch";
 export function lifecycleMixin(Vue) {
     Vue.prototype._update = function(vnode) {
-        debugger;
         // 既有初始化 又又更新 
         const vm = this;
-        vm.$el = patch(vm.$el, vnode);
+        const prevVnode = vm._vnode; // 表示将当前的虚拟节点保存起来
 
+        if(!prevVnode){ // 初次渲染
+            vm.$el = patch(vm.$el, vnode);
+        }else{
+            vm.$el = patch(prevVnode,vnode);
+        }
+        vm._vnode = vnode
     }
     Vue.prototype.$nextTick = nextTick
 }

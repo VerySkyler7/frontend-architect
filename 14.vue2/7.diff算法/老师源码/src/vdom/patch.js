@@ -56,7 +56,7 @@ export function patch(oldVnode, vnode) {
             el.innerHTML = ``; // 直接删除老节点
         }
         // vue的特点是每个组件都有一个watcher，当前组件中数据变化 只需要更新当前组件
-
+        return el;
     }
 }
 
@@ -64,8 +64,15 @@ function isSameVnode(oldVnode, newVnode) {
     return (oldVnode.tag == newVnode.tag) && (oldVnode.key == newVnode.key);
 }
 
-function patchChildren(el, oldChildren, newChildren) {
 
+
+// dom的生成 ast => render方法 => 虚拟节点 => 真实dom
+// 更新时需要重新创建ast语法树吗？
+// 如果动态的添加了节点 （绕过vue添加的vue监控不到的） 难道不需要重新ast吗？
+// 后续数据变了，只会操作自己管理的dom元素
+// 如果直接操作dom 和 vue无关，不需要重新创建ast语法树
+
+function patchChildren(el, oldChildren, newChildren) {
     let oldStartIndex = 0;
     let oldStartVnode = oldChildren[0];
     let oldEndIndex = oldChildren.length - 1;
@@ -75,7 +82,23 @@ function patchChildren(el, oldChildren, newChildren) {
     let newEndIndex = newChildren.length - 1;
     let newEndVnode = newChildren[newEndIndex];
 
+    const makeIndexByKey = (children)=>{
+        return children.reduce((memo,current,index)=>{
+            if(current.key){
+                memo[current.key] = index;
+            }
+            return memo;
+        },{})
+    }
+    const keysMap = makeIndexByKey(oldChildren);
     while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
+        // 头头比较 尾尾比较 头尾比较 尾头比较
+        // 优化了 向后添加， 向前添加，尾巴移动到头部，头部移动到尾部 ，反转
+        if(!oldStartVnode){ // 已经被移动走了
+            oldStartVnode = oldChildren[++oldStartIndex];
+        }else if(!oldEndVnode){
+            oldEndVnode = oldChildren[--oldEndIndex];
+        }
         // 同时循环新的节点和 老的节点，有一方循环完毕就结束了
         if (isSameVnode(oldStartVnode, newStartVnode)) { // 头头比较，发现标签一致，
             patch(oldStartVnode, newStartVnode);
@@ -98,6 +121,19 @@ function patchChildren(el, oldChildren, newChildren) {
             el.insertBefore(oldEndVnode.el,oldStartVnode.el);
             oldEndVnode = oldChildren[--oldEndIndex];
             newStartVnode = newChildren[++newStartIndex];
+        }else{
+            // 乱序比对   核心diff
+            // 1.需要根据key和 对应的索引将老的内容生成程映射表
+            let moveIndex = keysMap[newStartVnode.key]; // 用新的去老的中查找
+            if(moveIndex == undefined){ // 如果不能复用直接创建新的插入到老的节点开头处
+                el.insertBefore(createElm(newStartVnode),oldStartVnode.el);
+            }else{
+                let moveNode = oldChildren[moveIndex];
+                oldChildren[moveIndex] = null; // 此节点已经被移动走了
+                el.insertBefore(moveNode.el,oldStartVnode.el);
+                patch(moveNode,newStartVnode); // 比较两个节点的属性
+            }
+            newStartVnode = newChildren[++newStartIndex]
         }
     }
     // 如果用户追加了一个怎么办？  
@@ -115,7 +151,8 @@ function patchChildren(el, oldChildren, newChildren) {
     }
     if(oldStartIndex <= oldEndIndex){
         for (let i = oldStartIndex; i <= oldEndIndex; i++) {
-            el.removeChild(oldChildren[i].el);
+            //  如果老的多 将老节点删除 ， 但是可能里面有null 的情况
+            if(oldChildren[i] !== null) el.removeChild(oldChildren[i].el);
         }
     }
 
