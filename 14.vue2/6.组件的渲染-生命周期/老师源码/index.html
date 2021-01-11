@@ -19,19 +19,23 @@
 
     <!-- render -> vnode -> 真实dom -->
     <div id="app">
-        <my-button></my-button>
+        {{a}}
+        <!-- <my-button></my-button> -->
     </div>
-    <script src="dist/vue.js"></script>
-    <!-- <script src="node_modules/vue/dist/vue.js"></script> -->
+    <!-- <script src="dist/vue.js"></script> -->
+    <script src="node_modules/vue/dist/vue.js"></script>
     <script>
-        Vue.component("my-button", {
-            template: "<button>heelo</button>"
-        });
+        // Vue.component("my-button", {
+        //     template: "<button>heelo</button>"
+        // });
 
-        Vue.mixin(<my-button />)
+        // Vue.mixin(<my-button />)
 
         const vm = new Vue({
             el: "#app",
+            data: {
+                a: 1
+            }
             // components: {
             //     "my-button": {
             //         template: "<button>world</button>",
@@ -41,6 +45,12 @@
             //     }
             // }
         })
+
+        vm.$nextTick(() => {
+            console.log(app);
+        })
+
+        vm.a = 2;
     </script>
 
 </body>
