@@ -19,7 +19,7 @@ Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
-  el = el && query(el)
+  el = el && query(el) // el可以是一个真实的dom，如果找不到el会创建一个div el。
 
   /* istanbul ignore if */
   if (el === document.body || el === document.documentElement) {
@@ -31,7 +31,7 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
-  if (!options.render) {
+  if (!options.render) { 
     let template = options.template
     if (template) {
       if (typeof template === 'string') {

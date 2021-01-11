@@ -26,6 +26,7 @@
 13. LICENSE 执照、许可 描述了版权相关的说明
 
 # 寻找源码入口文件
+0. 具体可参见入口关系图(箭头反过来为调用关系)
 1. 通常代码的入口在src的index下。
 2. 入口分析：(关键点：到package.json下寻找build 命令)
    1. 对于第三方包，运行时通常找package.json下的main或module自动运行。
@@ -50,5 +51,51 @@
             //    2. es代表es module, 代表es6规范。
             //    3. umd代表amd和cmd规范的集合体，可用于浏览器环境。通常会将commonJS和es module的语法转成umd，这样可以用于任何环境。
       ```
-      3. 通过config.js => builds中的key + format得知 web-runtime-esm 为web端运行时代码入口，web-full-esm 为web端运行 + 支持编译的代码入口。
+      1. 通过config.js => builds中的key + format得知 web-runtime-esm 为web端运行时代码入口，web-full-esm 为web端运行 + 支持编译的代码入口。
          1. 入口分别为 src/platforms/entry-runtime.js src/platforms/entry-runtime-with-compiler.js
+
+
+#### src的目录介绍
+1. compiler： 模板编译 生成render代码
+2. core： 存放核心代码
+   1. components： 存放keep-alive
+   2. golbal-api： 定义挂载到Vue上的一些方法，如mixin component extend等
+   3. instance： 存放组件实例化的入口文件及实例化需要用到的一些初始化方法，如初始化原型上的一些方法：_init、$mount、_c、_update、$watch、initState、initComputed、initWatch。
+   4. observer：用于对data进行依赖收集。
+   5. util：存放nextTick、mergeOptions等方法。
+   6. vdom：存放虚拟dom diff、操作真实dom的相关代码
+3. platforms： 针对不同平台做不同的打包处理？
+4. server：服务器渲染相关代码(后面会讲)
+5. sfc：做模板解析，对.vue文件进行解析
+6. shared：存放各个平台需要用到的一些常量或方法。
+   
+#### 入口分析 entry-runtime.js entry-runtime-with-compiler
+1. 他们都引入了`./runtime/index.`文件
+2. entry-runtime-with-compiler.js 对Vue.prototype.$mount进行劫持，增加了模板编译的相关代码。
+3. runtime/index.js
+   1. runtime的作用是在Vue上定义一些方面，方便后面调用，同时针对不同平台做了抹平操作。
+   2. Vue原型上定义了$mount(用于组件的挂载)、\__patch__(用于dom diff及渲染元素的)
+   3. 执行extend，将不同平台下的directive(指令)、components合并到Vue.options上面。
+   4. 引入core/index.js `import Vue from 'core/index'`
+4. core/index.js
+   1. 核心干了一件事：调用了initGlobalApi，用于初始化Vue上面的一些方法，如mixin、component、extend等。
+   2. 感悟：这就是拆分Vue的好处，不是把Vue上面的所有方法都定义到一个文件或方法里，可以在有需要的时候才进行方法的定义，另外把Vue进行导出导入，实现了高内聚低耦合的效果。
+   3. 引入了Vue `import Vue from './instance/index'`，至此才定位到了真正的业务入口。
+
+#### 真正的核心入口 src/core/instance/index
+1. 定义了Vue构造函数，初始化原型上的一些方法
+   ``` js
+   initMixin(Vue) // _init
+   stateMixin(Vue) // $set $delete $data $watch
+   eventsMixin(Vue) // $on $emit $once $off
+   lifecycleMixin(Vue) // _update => dom diff => render realdom
+   renderMixin(Vue) // $nextTick _render => vm.options.render() && define _c _v _s ...
+   ```
+
+# src/core/index initGlobalApi
+1. set get 
+2. 
+
+
+
+# 周日笔记

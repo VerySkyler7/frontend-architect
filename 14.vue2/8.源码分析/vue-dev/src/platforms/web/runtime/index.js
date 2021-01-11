@@ -27,8 +27,9 @@ Vue.config.getTagNamespace = getTagNamespace
 Vue.config.isUnknownElement = isUnknownElement
 
 // install platform runtime directives & components
-extend(Vue.options.directives, platformDirectives)
-extend(Vue.options.components, platformComponents)
+// 这里的extend和Vue.extend不是一回事。相当于是针对不同平台的一种抹平操作。
+extend(Vue.options.directives, platformDirectives) // v-mode v-show
+extend(Vue.options.components, platformComponents) // transition 动画组件
 
 // install platform patch function
 Vue.prototype.__patch__ = inBrowser ? patch : noop
