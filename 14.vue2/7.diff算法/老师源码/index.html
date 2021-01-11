@@ -7,7 +7,24 @@
     <title>Document</title>
 </head>
 <body>
-    <script src="dist/vue.js"></script>
+    <div id="app">{{test}}</div>
+    
+    <!-- <script src="dist/vue.js"></script> -->
+    <script src="node_modules/vue/dist/vue.js"></script>
+    
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                test: {
+                    a: 1
+                }
+            }
+        })
+
+        vm.$set(vm.test, 'b', 2)
+    </script>
+    
 </body>
 
 </html>
