@@ -7,10 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="app">{{test}}</div>
+    <div id="app">
+        <aa></aa>
+        <aa></aa>
+    </div>
     
-    <!-- <script src="dist/vue.js"></script> -->
-    <script src="node_modules/vue/dist/vue.js"></script>
+    <script src="dist/vue.js"></script>
+    <!-- <script src="node_modules/vue/dist/vue.js"></script> -->
     
     <script>
         const vm = new Vue({
@@ -19,10 +22,18 @@
                 test: {
                     a: 1
                 }
+            },
+            components: {
+                aa: {
+                    template: '<div>{{b}}</div>',
+                    data: {
+                        b: { c: 1 }
+                    }
+                }
             }
         })
 
-        vm.$set(vm.test, 'b', 2)
+        // vm.$set(vm.test, 'b', 2)
     </script>
     
 </body>

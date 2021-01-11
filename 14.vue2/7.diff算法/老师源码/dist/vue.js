@@ -172,6 +172,7 @@
 
   strats.components = function (parentVal, childVal) {
     // Vue.options.components
+    debugger;
     var options = Object.create(parentVal); // 根据父对象构造一个新对象 options.__proto__= parentVal
 
     if (childVal) {
