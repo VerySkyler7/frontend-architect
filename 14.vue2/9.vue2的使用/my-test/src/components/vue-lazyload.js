@@ -1,4 +1,4 @@
-import _ from 'lodash'
+// import _ from 'lodash'
 
 const vueLazyload = {
     install(Vue, opt){
@@ -11,7 +11,15 @@ const vueLazyload = {
     }
 }
 
-// const scrollParent = ()
+const scrollParent = (child) => {
+    let parent = child.parentNode;
+    while(parent) {
+        if(/scroll/.test(getComputedStyle(parent)['overflow'])) {
+            return parent;
+        }
+        parent = parent.parentNode;
+    }
+}
 
 const lazy = (Vue) => {
     return class {
@@ -23,10 +31,23 @@ const lazy = (Vue) => {
 
         add(el, bindings) {
             Vue.nextTick(() => {
-                let ele = scrollParent(el);
+                // 1. 绑定滚动事件
+                let parent = scrollParent(el)
+
+                // 2. 监测el是否需要显示
+
+                // 3. 需要显示则将src设置成img
+                console.log(parent);
+                console.log(getComputedStyle(el.parentNode.parentNode)['overflow']);
+                el.setAttribute("src", bindings.value)
             })
+            console.log(Vue , bindings);
+            // Vue.nextTick(() => {
+            //     let ele = scrollParent(el);
+            // })
         }
 
+        remove(){}
     }
 }
 

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import HelloWorld from './components/DirectiveClickOutside.vue'
+import HelloWorld from './components/LazyLoad.vue'
 
 export default {
   name: 'App',

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="box">
       <ul>
           <li v-for="(item, index) in imgArr" :key="index">
               <!-- <img :src="item" alt="img"> -->
@@ -65,5 +65,12 @@ export default {
 </script>
 
 <style>
-
+ .box{
+     width: 400px;
+     height: 400px;
+     overflow: scroll;
+ }
+ img{
+     width: 100%;
+ }
 </style>
