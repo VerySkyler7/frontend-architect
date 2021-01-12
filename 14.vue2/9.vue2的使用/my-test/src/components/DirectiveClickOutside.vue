@@ -1,12 +1,21 @@
 <template>
   <div class="box" v-click-outside.yyy.yy="hide">
-    <input type="text" @focus="show" />
+    <input type="text" @focus="show" v-test="hide" />
     <div v-show="isShow">hahaha</div>
   </div>
 </template>
 
 <script>
 // 自定义指令的核心就是操作dom，给dom绑定事件
+
+import Vue from 'vue'
+
+Vue.directive('test', {
+  bind(el, bindings){
+    console.log(el, bindings);
+  },
+  unbind(){}
+})
 
 export default {
   name: "ClickOutside",
