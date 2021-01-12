@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>{{ a }}</h1>
+    <h1>{{ test }} {{ b }}</h1>
   </div>
 </template>
 
@@ -12,18 +12,21 @@ export default {
   },
   data(){
     return {
-      a: 1
+      a: 1,
+      b: 2
     }
   },
-  created(){
-    if(!window.arr123) window.arr123 = []
-    window.arr123.push(this)
+  mounted() {
+    setTimeout(() => {
+      this.b = 7
+      console.log(999);
+    }, 1000)
   },
-  mounted(){
-    console.log(666);
-  },
-  aaa: {
-    test: 1
+  computed: {
+    test(){
+      console.log(888);
+      return this.a;
+    }
   }
 }
 </script>
