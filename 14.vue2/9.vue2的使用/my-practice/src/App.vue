@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import HelloWorld from './components/LazyLoad.vue'
+import HelloWorld from './components/ComputedDirty.vue'
 
 export default {
   name: 'App',

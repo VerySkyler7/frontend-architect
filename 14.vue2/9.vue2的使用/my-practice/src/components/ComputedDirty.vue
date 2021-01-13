@@ -16,6 +16,12 @@ export default {
       b: 2
     }
   },
+  // beforeCreate() { // beforeCreate之前获取data的方式
+  //   console.log(this.constructor.options.data());
+  // },
+  // created() {
+  //   console.log(this._data);
+  // },
   mounted() {
     setTimeout(() => {
       this.b = 7
