@@ -22,13 +22,13 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   // config
   const configDef = {}
   configDef.get = () => config
-  if (process.env.NODE_ENV !== 'production') {
-    configDef.set = () => {
-      warn(
-        'Do not replace the Vue.config object, set individual fields instead.'
-      )
-    }
-  }
+  // if (process.env.NODE_ENV !== 'production') {
+  //   configDef.set = () => {
+  //     warn(
+  //       'Do not replace the Vue.config object, set individual fields instead.'
+  //     )
+  //   }
+  // }
   Object.defineProperty(Vue, 'config', configDef)
 
   // exposed util methods.
@@ -46,11 +46,12 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   Vue.nextTick = nextTick
 
   // 2.6 explicit observable API
-  Vue.observable = <T>(obj: T): T => {
+  Vue.observable = (obj) => {
     observe(obj)
     return obj
   }
 
+//Vue.options上主要放了两个东西  将全局方法+s 放上去，将keep-alive放上去
   Vue.options = Object.create(null)
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)

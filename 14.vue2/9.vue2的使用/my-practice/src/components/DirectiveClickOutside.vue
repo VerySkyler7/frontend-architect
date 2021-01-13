@@ -7,11 +7,16 @@
 
 <script>
 // 自定义指令的核心就是操作dom，给dom绑定事件
+// 自定义指令的实现方式：
+// 可以通过Vue.directive创建全局指令，在vm的options中通过directives创建组件内部指令
+// directive需要实现bind和unbind两个方法，分别是在创建组件和销毁组件的时候被调用
+// 通过bind里的参数，可以获取到指令所挂载的真实dom，指令所使用的名字、value、modifiers(装饰器)，及组件的虚拟node
+// (核心)bind里可以通过el操作真实dom，通常是绑定一些dom事件，如clickOutside、scroll事件(懒加载)。
 
 import Vue from 'vue'
 
 Vue.directive('test', {
-  bind(el, bindings){
+  bind(el, bindings){ // ？？？指令的bind方法是在patch时创建完真实el运行的
     console.log(el, bindings);
   },
   unbind(){}

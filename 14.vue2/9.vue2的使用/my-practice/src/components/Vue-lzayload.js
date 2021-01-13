@@ -1,3 +1,10 @@
+// 懒加载插件的核心思路
+// 插件的定义：导出一个对象，里面包含install方法，可以获取到大Vue和用户传入的options。install中定义全局指令，bind对应scroll方法。
+// 核心首先：
+// 1. 找到需要进行滚动的父元素，绑定滚动事件。需要通过节流介绍滚动事件的触发。
+// 2. 获取元素距离当前屏幕的位置，如果在屏幕内则通过创建Imgage进行加载图片，加载后挂载到el的src上。
+// 3. 给每个el增加标识，判断是否需要加载，如果已加载过则不需要加载。
+
 import _ from 'lodash'
 const VueLazyLoad = {
     install(Vue, options) {
