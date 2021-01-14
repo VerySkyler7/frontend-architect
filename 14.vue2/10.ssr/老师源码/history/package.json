@@ -1,0 +1,19 @@
+{
+  "name": "history-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.1",
+    "koa-router": "^10.0.0",
+    "vue": "^2.6.12",
+    "vue-server-renderer": "^2.6.12"
+  }
+}
