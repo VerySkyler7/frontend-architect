@@ -27,3 +27,4 @@
 # 不重要
 1. 整理todo
 2. 研究下ReadStream中的mode 0o666和flags的区别
+
