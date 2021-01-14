@@ -9,7 +9,6 @@ export default () => {
     return { app }
 }
 
-// 下面代码单例的问题主要是针对 render.createRenderer().renderToString(vm);这种方式，如果是webpack打包的代码，就无所谓了
 // let vue = new Vue({
 //     render:h=>h(App) //h => createElement _c
 // }).$mount('#app');
