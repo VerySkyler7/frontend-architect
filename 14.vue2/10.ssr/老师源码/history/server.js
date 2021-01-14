@@ -12,6 +12,15 @@ const vm = new Vue({
     data:{
         name:'zf'
     },
+    created(){
+        console.log(22222);
+    },
+    beforeCreate(){
+        console.log(1111);
+    },
+    beforeMount() {
+        console.log(3333);
+    },
     template:'<div style="color:blue">hello {{name}}</div>',// 没有所谓的createElement的过程，而是直接拼接成了字符串
     methods: {
         clickBtn(){

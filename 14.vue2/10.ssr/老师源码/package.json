@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "//": "client:dev需要通过client.html访问，因为它是内存中寻找打包后的",
-    "client:dev": "webpack serve --config scripts/webpack.client.js", 
+    "client:dev": "webpack serve --config scripts/webpack.client.js",
+    "//": "--watch 代表代码发生变化时实时build",
     "client:build": "webpack --config scripts/webpack.client.js --watch",
     "server:build": "webpack --config scripts/webpack.server.js --watch",
+    "//": "concurrently代表可以同时执行多条命令，需单独安装npm包 concurrently",
     "run:all": "concurrently \"npm  run client:build\" \"npm run server:build\""
   },
   "keywords": [],

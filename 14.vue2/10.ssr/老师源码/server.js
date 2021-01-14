@@ -11,14 +11,15 @@ const serverBundle = fs.readFileSync(path.resolve(__dirname, 'dist/server.bundle
 const template = fs.readFileSync(path.resolve(__dirname, 'dist/server.html'), 'utf8');
 
 
-// 根据实例
-const render = VueServerRenderer.createBundleRenderer(serverBundle, {
+// serverBundle里存放了Vue实例，将实例和template融合在一起
+const render = VueServerRenderer.createBundleRenderer(serverBundle, { 
     template
 })
 
+// 通过服务端渲染服务端打包的结果
 router.get('/', async (ctx) => {
     ctx.body = await new Promise((resolve, reject) => {
-        render.renderToString((err, html) => { // 如果想让css生效 只能使用回调的方式
+        render.renderToString((err, html) => { // 如果想让css生效 只能使用回调的方式，直接使用下面的await，会导致样式无法渲染。可能是vue-server-renderer中存在bug
             if (err) reject(err);
             resolve(html)
         })
@@ -27,7 +28,7 @@ router.get('/', async (ctx) => {
     //    console.log(html)
 })
 
-// 当客户端发送请求时会先去dist目录下查找
-app.use(static(path.resolve(__dirname,'dist')))
+
+app.use(static(path.resolve(__dirname,'dist'))) // 当客户端通过服务器查找文件时，会先去dist目录下查找。如果不使用此插件，index.ssr.html中将找不到client.bundle.js文件
 app.use(router.routes());
 app.listen(3000);

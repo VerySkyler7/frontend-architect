@@ -13,8 +13,8 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 module.exports = { // 导出打包的配置文件
     mode: 'development',
     output: {
-        filename: '[name].bundle.js' ,// 默认就是main, 默认是dist目录
-        path:path.resolve(__dirname,'../dist')
+        filename: '[name].bundle.js' , // 默认name使用的是entry的名字
+        path:path.resolve(__dirname,'../dist') // 默认就是main, 默认是dist目录
     },
     module: { // 对模块进行处理
         rules: [{
