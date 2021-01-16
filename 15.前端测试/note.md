@@ -16,5 +16,38 @@
 - BDD 行为驱动开发，先定好功能再开发。
 - TDD 测试驱动开发，先写好测试代码再开发。
 
+----------------------------------------分割线----------------------------------------
 
+## Jest的使用
+1. 安装jest npm包
+   ```
+   npm i jest -D
+   ```
+2. 安装@babel/preset-env
+   1. 由于jest默认只支持node语法，所以用到es module语法时需要通过babel进行转义
+   2. jest中默认带了babel-jest，所以只需要安装@babel/preset-env。
+   ``` js
+   npm i @babel/preset-env -D
+   // preset-env的作用：它是bebel的一个插件，将高级语法转成低级语法。
+   ```
+   3. 构建.babelrc
+   ``` js
+    {
+        "presets": [ // presets是插件的集合
+            ["@babel/preset-env", { // 对@babel/preset-env进行配置
+                "targets": {"node": "current"} // 将项目中的文件转换成node当前版本的语法
+            }]
+        ]
+    }
+   ```
+   4. 代码编写参加jest/src
+3. npx jest
+   扫描项目中.test.js结尾的文件开始运行
+
+4. 实时监测
+   ``` js
+   "scripts": {
+        "test": "jest --watchAll"
+    }
+   ```
 

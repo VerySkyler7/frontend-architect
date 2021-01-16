@@ -1,0 +1,7 @@
+{
+    "presets": [ // presets是插件的集合
+        ["@babel/preset-env", { // 对@babel/preset-env进行配置
+            "targets": {"node": "current"} // 将项目中的文件转换成node当前版本的语法
+        }]
+    ]
+}
