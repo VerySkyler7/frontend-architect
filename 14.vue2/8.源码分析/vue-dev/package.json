@@ -14,7 +14,7 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "dev": "rollup -w -c scripts/config.js --environment TARGET:web-full-dev",
+    "dev": "rollup -w -c scripts/config.js --environment TARGET:web-full-dev --sourcemap",
     "dev:cjs": "rollup -w -c scripts/config.js --environment TARGET:web-runtime-cjs-dev",
     "dev:esm": "rollup -w -c scripts/config.js --environment TARGET:web-runtime-esm",
     "dev:test": "karma start test/unit/karma.dev.config.js",
@@ -23,7 +23,8 @@
     "dev:weex": "rollup -w -c scripts/config.js --environment TARGET:weex-framework",
     "dev:weex:factory": "rollup -w -c scripts/config.js --environment TARGET:weex-factory",
     "dev:weex:compiler": "rollup -w -c scripts/config.js --environment TARGET:weex-compiler ",
-    "build": "node scripts/build.js", // 这个是vue打包的执行语句
+    "//":"这个是vue打包的执行语句",
+    "build": "node scripts/build.js", 
     "build:ssr": "npm run build -- web-runtime-cjs,web-server-renderer",
     "build:weex": "npm run build -- weex",
     "test": "npm run lint && flow check && npm run test:types && npm run test:cover && npm run test:e2e -- --env phantomjs && npm run test:ssr && npm run test:weex",
