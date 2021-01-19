@@ -6,9 +6,9 @@ class Store { // new Vue.Store 缠身一个实例
         let { state, getters, mutations, actions, module, strict } = options;
         this.getters = {}; // 我再取getters属性的时候 把他代理到计算属性上
         const computed = {};
-        forEach(getters, (fn, key) => {
+        forEach(getters, (valFn, key) => {
             computed[key] = () => {
-                return fn(this.state); // 为了保证参数是state
+                return valFn(this.state); // 为了保证参数是state
             }
             // 当我们去getters上取值 需要对computed取值
             Object.defineProperty(this.getters, key, {

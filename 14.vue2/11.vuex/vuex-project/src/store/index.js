@@ -8,8 +8,16 @@ export default new Vuex.Store({
     name: 'test'
   },
   mutations: {
+    changeNameMutt(state, payload){
+      setTimeout(() => {
+        state.name = payload.name
+      }, 2000)
+    }
   },
   actions: {
+    changeNameAct(){
+      
+    }
   },
   modules: {
   }

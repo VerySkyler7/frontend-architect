@@ -1,5 +1,5 @@
-export const forEach = (obj,fn)=>{
+export const forEach = (obj,cb)=>{
     Object.keys(obj).forEach((key)=>{
-        fn(obj[key],key)
+        cb(obj[key],key)
     })
 }
