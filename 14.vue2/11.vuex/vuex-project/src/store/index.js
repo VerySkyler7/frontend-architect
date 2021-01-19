@@ -9,14 +9,12 @@ export default new Vuex.Store({
   },
   mutations: {
     changeNameMutt(state, payload){
-      setTimeout(() => {
-        state.name = payload.name
-      }, 2000)
+      state.name = payload.name
     }
   },
   actions: {
     changeNameAct(){
-      
+      // this. action如何调用mutation
     }
   },
   modules: {
