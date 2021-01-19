@@ -1,16 +1,30 @@
 <template>
   <div id="app">
-    <HelloWorld />
+    <HelloWorld v-if="isShow"/>
+    <HelloWorld1 v-else />
+    <button @click="clickBtn">切换</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/ComputedDirty.vue'
+import HelloWorld from './components/LazyLoad.vue'
+import HelloWorld1 from './components/ComputedDirty.vue'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      isShow: true
+    }
+  },
+  methods: {
+    clickBtn() {
+      this.isShow = !this.isShow
+    }
+  },
   components: {
-    HelloWorld
+    HelloWorld,
+    HelloWorld1
   }
 }
 </script>

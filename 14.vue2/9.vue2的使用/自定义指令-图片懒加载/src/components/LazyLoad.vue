@@ -43,14 +43,17 @@ const imgArr = [
 ]
 
 import Vue from 'vue'
-import VueLazyload from './vue-lazyload.js'
+// import VueLazyload from './vue-lazyload.js'
+import VueLazyload from 'vue-lazyload'
 import defaultImg from '@/assets/default.png'
-
+import VueTest from './vue-test.js'
 
 Vue.use(VueLazyload, {
     loading: defaultImg,
     preload: 1.2
 });
+
+Vue.use(VueTest, {test: 1})
 
 console.log(defaultImg);
 
