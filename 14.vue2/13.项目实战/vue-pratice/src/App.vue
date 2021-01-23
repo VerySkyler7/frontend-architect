@@ -1,5 +1,5 @@
 <template>
-  <el-container id="app" style="min-width=800px">
+  <el-container id="app" style="min-width:800px;">
     <el-header>
       <page-header></page-header>
     </el-header>
