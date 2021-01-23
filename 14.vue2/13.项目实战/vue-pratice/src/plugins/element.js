@@ -1,4 +1,15 @@
 import Vue from 'vue'
-import { Button } from 'element-ui'
+import {
+    Button, Container, Col, Row, Header,
+    Main, Footer, Menu, MenuItem, Submenu
+} from 'element-ui'
 
-Vue.use(Button)
+const elements = {
+    Button, Container, Col, Row,
+     Header, Main, Footer, Menu, MenuItem, Submenu
+};
+
+Object.values(elements).forEach(elm => {
+    Vue.use(elm)
+})
+
