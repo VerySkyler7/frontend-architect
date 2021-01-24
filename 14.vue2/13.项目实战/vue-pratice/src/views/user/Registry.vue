@@ -1,37 +1,47 @@
 <template>
-  <el-form
-    :model="ruleForm"
-    status-icon
-    :rules="rules"
-    ref="ruleForm"
-    label-width="100px"
-    class="demo-ruleForm"
-  >
-    <el-form-item
-      label="账号"
-      prop="username"
-    >
-      <el-input v-model.number="ruleForm.username"></el-input>
-    </el-form-item>
-    <el-form-item label="密码" prop="pass">
-      <el-input
-        type="password"
-        v-model="ruleForm.pass"
-        autocomplete="off"
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="确认密码" prop="checkPass">
-      <el-input
-        type="password"
-        v-model="ruleForm.checkPass"
-        autocomplete="off"
-      ></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-      <el-button @click="resetForm('ruleForm')">重置</el-button>
-    </el-form-item>
-  </el-form>
+  <div class="reg-page">
+    <el-row>
+      <el-col class="title">
+        <h2>欢迎注册</h2>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="10" :offset="7">
+        <el-form
+          :model="ruleForm"
+          status-icon
+          :rules="rules"
+          ref="ruleForm"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item label="账号" prop="username">
+            <el-input v-model.number="ruleForm.username"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="pass">
+            <el-input
+              type="password"
+              v-model="ruleForm.pass"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="checkPass">
+            <el-input
+              type="password"
+              v-model="ruleForm.checkPass"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm')"
+              >提交</el-button
+            >
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -41,7 +51,7 @@ export default {
       if (value.length < 5) {
         return callback(new Error("账号的长度不能小于5"));
       } else {
-          callback()
+        callback();
       }
 
       //   setTimeout(() => {
@@ -84,7 +94,9 @@ export default {
       rules: {
         pass: [{ validator: validatePass, trigger: "blur" }],
         checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        username: [{ required: true, validator: checkUserName, trigger: "blur" }],
+        username: [
+          { required: true, validator: checkUserName, trigger: "blur" },
+        ],
       },
     };
   },
@@ -105,3 +117,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+    .reg-page {
+        .title {
+            text-align: center;
+            margin: 20px;
+        }
+    }
+</style>
