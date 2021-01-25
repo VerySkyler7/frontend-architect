@@ -1,3 +1,4 @@
 export default {
-    registry: '/user/registry'
+    registry: '/user/registry',
+    login: '/user/login'
 }
