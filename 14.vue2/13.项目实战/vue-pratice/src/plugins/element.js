@@ -3,7 +3,7 @@ import {
     Button, Container, Col, Row, Header,
     Main, Footer, Menu, MenuItem, Submenu,
     Carousel, CarouselItem, Form, FormItem, 
-    Input
+    Input, Message
 } from 'element-ui'
 
 const elements = {
@@ -17,3 +17,4 @@ Object.values(elements).forEach(elm => {
     Vue.use(elm)
 })
 
+Vue.prototype.$message = Message;

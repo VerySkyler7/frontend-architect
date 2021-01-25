@@ -18,10 +18,10 @@
           <el-form-item label="账号" prop="username">
             <el-input v-model.number="ruleForm.username"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="pass">
+          <el-form-item label="密码" prop="password">
             <el-input
               type="password"
-              v-model="ruleForm.pass"
+              v-model="ruleForm.password"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import * as user from "@/api/user";
 export default {
   data() {
     var checkUserName = (rule, value, callback) => {
@@ -79,7 +80,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
+      } else if (value !== this.ruleForm.password) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
@@ -87,12 +88,12 @@ export default {
     };
     return {
       ruleForm: {
-        pass: "",
+        password: "",
         checkPass: "",
         username: "",
       },
       rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
+        password: [{ validator: validatePass, trigger: "blur" }],
         checkPass: [{ validator: validatePass2, trigger: "blur" }],
         username: [
           { required: true, validator: checkUserName, trigger: "blur" },
@@ -102,12 +103,17 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          alert("submit!");
+          user
+            .registry(this.ruleForm)
+            .then((val) => {
+              this.$message.success(val.data)
+              this.$router.push('/user/login')
+            })
+            .catch((err) => this.$message.error(err.data));
         } else {
-          console.log("error submit!!");
-          return false;
+          this.$message.error('提交失败')
         }
       });
     },
@@ -119,10 +125,10 @@ export default {
 </script>
 
 <style lang="scss">
-    .reg-page {
-        .title {
-            text-align: center;
-            margin: 20px;
-        }
-    }
+.reg-page {
+  .title {
+    text-align: center;
+    margin: 20px;
+  }
+}
 </style>
