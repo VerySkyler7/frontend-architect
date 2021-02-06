@@ -58,6 +58,7 @@ export default {
       },
     };
   },
+  
   methods: {
     ...userMapActions([types.USER_LOGIN]),
     submitForm(formName) {

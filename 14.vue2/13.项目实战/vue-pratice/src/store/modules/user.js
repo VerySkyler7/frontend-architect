@@ -4,7 +4,7 @@ import { setLocal, getLocal, removeLocal } from '@/utils/local'
 
 export default {
     state: {
-        userInfo: '',
+        userInfo: {},
         hasPermission: false,
     },
     mutations: {
@@ -22,7 +22,6 @@ export default {
     },
     actions: {
         async [types.SET_USER]({ commit }, { userInfo, has }) {
-            debugger
             commit(types.SET_USER, userInfo)
             commit(types.SET_PERMISSION, has)
         },
@@ -34,7 +33,10 @@ export default {
                 return Promise.reject(error);
             }
         },
-        async [types.VALIDATE_TOKEN]({ commit }) {
+        async [types.USER_LOGOUT]({ dispatch }) {
+            dispatch(types.SET_USER, { userInfo: {}, has: false })
+        },
+        async [types.VALIDATE_TOKEN]({ commit, dispatch }) {
             if (!getLocal('token')) return false;
             try {
                 const userInfo = await user.validate();
@@ -42,14 +44,12 @@ export default {
                     dispatch(types.SET_USER, { userInfo: {}, has: false })
                 } else {
                     dispatch(types.SET_USER, { userInfo, has: true })
+                    return true;
                 }
             } catch (err) {
                 dispatch(types.SET_USER, { userInfo: {}, has: false })
             }
+            return false;
         },
-        async [types.USER_LOGOUT]({ dispatch }) {
-            debugger
-            dispatch(types.SET_USER, { userInfo: {}, has: false })
-        }
     }
 }

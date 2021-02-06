@@ -12,7 +12,7 @@
         :router="true"
       >
         <el-menu-item index="/">home</el-menu-item>
-        <el-menu-item index="/post">publish article</el-menu-item>
+        <el-menu-item index="/article">publish article</el-menu-item>
       </el-menu>
     </el-col>
     <el-col :span="6">
@@ -56,8 +56,8 @@ export default {
   computed: {
     ...userMapState(["hasPermission", "userInfo"]),
   },
-  ...userMapActions([types.USER_LOGOUT]),
   methods: {
+    ...userMapActions([types.USER_LOGOUT]),
     clickLogout() {
       console.log("click");
       this[types.USER_LOGOUT]();
