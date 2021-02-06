@@ -23,20 +23,48 @@
         text-color="#fff"
         active-text-color="fff"
       >
-        <el-menu-item index="login">
-          <router-link to="/user/login">登录</router-link>
-        </el-menu-item>
-        <el-menu-item index="registry">
-          <router-link to="/user/registry">注册</router-link>
-        </el-menu-item>
-        <el-submenu index="profile">
-          <template slot="title">张三</template>
-          <el-menu-item index="logout">退出登录</el-menu-item>
-        </el-submenu>
+        <template v-if="!hasPermission">
+          <el-menu-item index="login">
+            <router-link to="/user/login">登录</router-link>
+          </el-menu-item>
+          <el-menu-item index="registry">
+            <router-link to="/user/registry">注册</router-link>
+          </el-menu-item>
+        </template>
+        <template v-else>
+          <el-submenu index="profile">
+            <template slot="title">{{ userInfo.username }}</template>
+            <el-menu-item index="logout" @click="clickLogout"
+              >退出登录</el-menu-item
+            >
+          </el-submenu>
+        </template>
       </el-menu>
     </el-col>
   </el-row>
 </template>
+
+<script>
+import { createNamespacedHelpers } from "vuex";
+import * as types from "../store/action-types";
+
+const {
+  mapState: userMapState,
+  mapActions: userMapActions,
+} = createNamespacedHelpers("user");
+export default {
+  computed: {
+    ...userMapState(["hasPermission", "userInfo"]),
+  },
+  ...userMapActions([types.USER_LOGOUT]),
+  methods: {
+    clickLogout() {
+      console.log("click");
+      this[types.USER_LOGOUT]();
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 .header-row {
@@ -50,7 +78,7 @@
     display: inline-block;
   }
   .menu {
-      height: 60px;
+    height: 60px;
   }
   .nav-right {
     float: right;

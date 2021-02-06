@@ -1,5 +1,6 @@
 import config from '@/config/config.js'
 import axios from 'axios'
+import { getLocal } from './local';
 
 class Request {
 
@@ -26,6 +27,7 @@ class Request {
         // request中的回调函数存放的是config
         instance.interceptors.request.use((config) => {
             // 一般增加一些token判断逻辑
+            config.headers.authorization = 'Bearer ' + getLocal('token');
             return config;
         })
 

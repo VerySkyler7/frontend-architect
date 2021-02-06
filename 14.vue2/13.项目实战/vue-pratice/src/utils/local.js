@@ -10,10 +10,14 @@ export const setLocal = (key, value) => {
 export const getLocal = key => {
     try {
         return JSON.parse(localStorage.getItem(key))
-    } catch () {
+    } catch (err) {
         return localStorage.getItem(key)
     }
 }
 
+// 删除token
+export const removeLocal = key => localStorage.removeItem(key)
+
 window.setLocal = setLocal;
 window.getLocal = getLocal;
+window.getLocal = removeLocal;

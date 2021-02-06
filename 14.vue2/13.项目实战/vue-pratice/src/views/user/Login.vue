@@ -44,7 +44,11 @@
 </template>
 
 <script>
-import * as user from "@/api/user";
+import { createNamespacedHelpers } from "vuex";
+import * as types from "../../store/action-types";
+import { v4 as uuidv4 } from "uuid";
+const { mapActions: userMapActions } = createNamespacedHelpers("user");
+
 export default {
   data() {
     return {
@@ -55,14 +59,13 @@ export default {
     };
   },
   methods: {
+    ...userMapActions([types.USER_LOGIN]),
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          user
-            .login(this.ruleForm)
-            .then((val) => {
-              this.$message.success(val.data);
-                this.$router.push('/')
+          this[types.USER_LOGIN]({ ...this.ruleForm, uid: uuidv4() })
+            .then(() => {
+              this.$router.push("/");
             })
             .catch((err) => this.$message.error(err.data));
         } else {
