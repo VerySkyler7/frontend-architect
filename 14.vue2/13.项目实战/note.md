@@ -28,3 +28,16 @@ vue ui
 0. 核心是通过to.matched对当前路由进行some判断，如果有一个需要needLogin则代表当前路由需要登录。
 1. 其中needLogin需要在router的meta中进行配置，这样在router.beforeEach中即可拿到meta。
 2. 具体可以查看router/hook.js中的逻辑。
+
+# 动态添加路由
+- 在路由钩子中调用action
+- action中根据用户的权限过滤出子路由
+- 通过parentRoute.children = childrenRoutes 添加子路由
+- 通过router.addRoutes(parentRoute)动态添加路由
+- 通过next({ ...to, replace: true }) 处理import()动态路由404的问题
+
+# 递归菜单 核心：
+- 将服务器的树形数据(是一个通过pid关联的数组)，转换成前端的children树形数据
+- 遍历服务器数据时，利用map扁平化记录每个item，方便给children添加时快速找到它的pid
+- 利用jsx递归的方式对children进行递归渲染menu-item
+

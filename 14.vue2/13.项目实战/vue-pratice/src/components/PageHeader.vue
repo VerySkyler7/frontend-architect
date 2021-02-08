@@ -21,7 +21,7 @@
         mode="horizontal"
         background-color="#333"
         text-color="#fff"
-        active-text-color="fff"
+        active-text-color="#fff"
       >
         <template v-if="!hasPermission">
           <el-menu-item index="login">
@@ -32,11 +32,19 @@
           </el-menu-item>
         </template>
         <template v-else>
-          <el-submenu index="profile">
+          <el-submenu
+            index="profile"
+            text-color="#fff"
+            active-text-color="#fff"
+          >
             <template slot="title">{{ userInfo.username }}</template>
-            <el-menu-item index="logout" @click="clickLogout"
-              >退出登录</el-menu-item
-            >
+            <el-menu-item index="manage" @click="clickManage">
+              系统管理
+              <!-- <router-link to="/manage">系统管理</router-link> -->
+            </el-menu-item>
+            <el-menu-item index="logout" @click="clickLogout">
+              退出登录
+            </el-menu-item>
           </el-submenu>
         </template>
       </el-menu>
@@ -46,6 +54,7 @@
 
 <script>
 import { createNamespacedHelpers } from "vuex";
+import router from '@/router/index'
 import * as types from "../store/action-types";
 
 const {
@@ -59,9 +68,13 @@ export default {
   methods: {
     ...userMapActions([types.USER_LOGOUT]),
     clickLogout() {
-      console.log("click");
       this[types.USER_LOGOUT]();
     },
+    clickManage() {
+      router.push({
+        path: '/manage'
+      })
+    }
   },
 };
 </script>
@@ -83,7 +96,6 @@ export default {
   .nav-right {
     float: right;
     a {
-      color: #fff;
       text-decoration-line: none;
     }
   }

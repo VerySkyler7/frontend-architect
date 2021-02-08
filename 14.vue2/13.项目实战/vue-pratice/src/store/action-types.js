@@ -15,3 +15,9 @@ export const SET_PERMISSION = "SET_PERMISSION"
 
 // 验证token
 export const VALIDATE_TOKEN = "VALIDATE_TOKEN"
+
+// 根据权限添加动态路由
+export const ADD_ROUTE = "ADD_ROUTE"
+
+// 添加菜单全新啊
+export const SET_MENU_PERMISSION = "SET_MENU_PERMISSION"
