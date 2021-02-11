@@ -39,8 +39,16 @@ const menuPermission = async function (to, from, next) {
     }
 }
 
+// 初始化websocket
+const initWebsocket = async function (to, from , next) {
+    if(store.state.user.hasPermission && !store.state.ws) {
+        store.dispatch(`${types.INIT_WEBSOCKET}`)
+    }   
+    next();
+}
+
 export default {
-    // 是否登录
-    loginPermission,
+    loginPermission, // 是否登录
     menuPermission,
+    initWebsocket,
 }
