@@ -8,13 +8,28 @@ export default new Vuex.Store({
     name: 'test'
   },
   mutations: {
-    changeNameMutt(state, payload){
-      state.name = payload.name
+    async changeNameMutt(state, {name}) {
+      const res = await new Promise((res, rej) => {
+        setTimeout(() => {
+          res(1)
+        }, 1000)
+      })
+      state.name = res
     }
   },
   actions: {
-    changeNameAct(){
+    async changeNameAct({ commit }, { name }) {
       // this. action如何调用mutation
+      const res = await new Promise((res, rej) => {
+        setTimeout(() => {
+          res(name)
+        }, 1000)
+      })
+
+      commit('changeNameMutt', { name })
+
+
+
     }
   },
   modules: {
