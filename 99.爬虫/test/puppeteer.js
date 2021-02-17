@@ -1,12 +1,20 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const handleData = require('./handleData');
 
+// 抓取数据的起始位置
+let start = 88;
+// 清理数据的时间间隔
+let handleInterval = 5 * 60 * 1000;
 // 当前视频索引
 let index = 0;
 // 当前页数
 let page = 0;
+// 调整爬取后的数据
+handleData(handleInterval);
 
+// 爬取数据程序入口
 (async () => {
     const browser = await puppeteer.launch({ headless: true }); // false 显示打开浏览器
     // 存放抓取后的全量数据
@@ -16,7 +24,7 @@ let page = 0;
     // await runOneList(homeUrl, browser, list);
 
     // 循环每一页
-    for (let i = 28; i < 20000; i++) {
+    for (let i = start; i < 20000; i++) {
         try {
             page = i + 1;
             const detailUrl = 'https://www.xvideos.com/new/' + i;
@@ -28,6 +36,18 @@ let page = 0;
     await browser.close();
 })();
 
+// 处理一个列表页及每个详情页
+async function runOneList(url, browser, list) {
+    let page = await browser.newPage();
+    await page.goto(url); // 等待页面network加载完毕
+    const newList = await getHref(page);
+    await page.close();
+
+    await addPraise(newList, browser);
+    // list.push(newList);
+    // console.log('list.length:::', list.length)
+    return list;
+}
 
 // 在列表页获取每个视频的title和href， 返回list
 async function getHref(page) {
@@ -65,25 +85,15 @@ async function addPraise(list, browser) {
     return list;
 }
 
+// 写入文件
 function writeFile(data) {
     console.log(page + '-' + index++);
-    const str = JSON.stringify(data) + ",";
-    fs.writeFile(path.resolve(__dirname, 'info1.json'), str, { flag: 'a' }, (err) => {
+    const str = "," + JSON.stringify(data);
+    fs.writeFile(path.resolve(__dirname, 'info.json'), str, { flag: 'a' }, (err) => {
         if(err) {
             console.log(err)
         }
     });
 }
 
-// 处理一个列表页及每个详情页
-async function runOneList(url, browser, list) {
-    let page = await browser.newPage();
-    await page.goto(url); // 等待页面network加载完毕
-    const newList = await getHref(page);
-    await page.close();
 
-    await addPraise(newList, browser);
-    // list.push(newList);
-    // console.log('list.length:::', list.length)
-    return list;
-}
