@@ -15,15 +15,15 @@ const superArr = {
         if (msg._type === 'info') superArr.binance = JSON.parse(msg._text)
     })
     await page.evaluate(() => {
-        const targetArr = ['BNB', 'XVS', 'SFP'];
+        const targetArr = [{name: 'BNB', sort: 3}, {name: 'XVS', sort: 4}, {name: 'CAKE', sort: 6}];
         setInterval(() => {
-            const res = targetArr.reduce((prev, name) => {
-                const nameElm = document.querySelector(`td[title=${name}]`);
+            const res = targetArr.reduce((prev, item) => {
+                const nameElm = document.querySelector(`td[title=${item.name}]`);
                 if (!nameElm) return prev;
 
                 const price = nameElm.nextElementSibling.innerText;
                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
-                prev.push({ name, price, rise })
+                prev.push({ name: item.name, price, rise, sort: item.sort })
                 return prev
             }, []);
             console.info(JSON.stringify(res))
@@ -42,14 +42,14 @@ const superArr = {
     })
 
     await page.evaluate(() => {
-        const targetArr = ['dot', 'ksm', 'btc', 'eth', 'badger', 'mdx', 'pols'];
+        const targetArr = [{name: 'dot', sort: 1}, {name: 'ksm', sort: 2}, {name: 'mdx', sort: 5}, {name: 'btc', sort: 7}, {name: 'eth', sort: 8}, {name: 'badger', sort: 0}, {name: 'pols', sort: 9}];
         setInterval(() => {
-            const res = targetArr.reduce((prev, name) => {
-                const firstElm = document.querySelector(`#${name}usdt`).firstElementChild.firstElementChild;
+            const res = targetArr.reduce((prev, item) => {
+                const firstElm = document.querySelector(`#${item.name}usdt`).firstElementChild.firstElementChild;
                 if (!firstElm) return prev;
                 const price = firstElm.nextElementSibling.innerText.split("≈")[0].trim();
                 const rise = firstElm.nextElementSibling.nextElementSibling.innerText;
-                prev.push({ name, price, rise })
+                prev.push({ name: item.name, price, rise, sort: item.sort })
                 return prev
             }, []);
             console.info(JSON.stringify(res))
@@ -60,7 +60,10 @@ const superArr = {
 
 ; (() => {
     setInterval(() => {
-        const arr = superArr.huoBi.concat(superArr.binance);
+        let arr = superArr.huoBi.concat(superArr.binance);
+        if(arr.length > 8) {
+            arr = arr.sort((a, b) => a.sort - b.sort)
+        }
         const res = arr.reduce((prev, item) => {
             // console.log(prev + item.name.toLocaleUpperCase() + ':' + item.price + ':' + item.rise + '  ')
             return prev + item.name.toLocaleUpperCase() + ':' + item.price + ':' + item.rise + '  '
