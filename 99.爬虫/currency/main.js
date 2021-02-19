@@ -49,8 +49,8 @@ const superArr = {
             {name: 'badger', sort: 0, count: 28, costPrice: 57}, 
             {name: 'dot', sort: 1, count: 2427, costPrice: 4}, 
             {name: 'ksm', sort: 2, count: 167.75, costPrice: 103}, // 214 * 7
-            {name: 'xem', sort: 4, count: 3317, costPrice: 0.47},
-            {name: 'mdx', sort: 5, count: 1421, costPrice: 3}, 
+            {name: 'mdx', sort: 4, count: 1421, costPrice: 3}, 
+            {name: 'xem', sort: 5, count: 3317, costPrice: 0.47},
             {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
             {name: 'eth', sort: 8, count: 0, costPrice: 0}, 
         ];
