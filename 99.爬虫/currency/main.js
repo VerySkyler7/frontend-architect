@@ -15,7 +15,10 @@ const superArr = {
         if (msg._type === 'info') superArr.binance = JSON.parse(msg._text)
     })
     await page.evaluate(() => {
-        const targetArr = [{name: 'BNB', sort: 3}, {name: 'XVS', sort: 4}, {name: 'CAKE', sort: 6}];
+        const targetArr = [
+            {name: 'BNB', sort: 3, count: 31.4}, 
+            {name: 'CAKE', sort: 6, count: 35}
+        ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
                 const nameElm = document.querySelector(`td[title=${item.name}]`);
@@ -23,7 +26,7 @@ const superArr = {
 
                 const price = nameElm.nextElementSibling.innerText;
                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
-                prev.push({ name: item.name, price, rise, sort: item.sort })
+                prev.push({ ...item, price, rise })
                 return prev
             }, []);
             console.info(JSON.stringify(res))
@@ -42,14 +45,22 @@ const superArr = {
     })
 
     await page.evaluate(() => {
-        const targetArr = [{name: 'dot', sort: 1}, {name: 'ksm', sort: 2}, {name: 'mdx', sort: 5}, {name: 'btc', sort: 7}, {name: 'eth', sort: 8}, {name: 'badger', sort: 0}, {name: 'pols', sort: 9},  {name: 'xem', sort: -1}];
+        const targetArr = [
+            {name: 'badger', sort: 0, count: 28}, 
+            {name: 'dot', sort: 1, count: 2427}, 
+            {name: 'ksm', sort: 2, count: 167.75}, 
+            {name: 'xem', sort: 4, count: 3317},
+            {name: 'mdx', sort: 5, count: 1421}, 
+            {name: 'btc', sort: 7, count: 0}, 
+            {name: 'eth', sort: 8, count: 0}, 
+        ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
                 const firstElm = document.querySelector(`#${item.name}usdt`).firstElementChild.firstElementChild;
                 if (!firstElm) return prev;
                 const price = firstElm.nextElementSibling.innerText.split("≈")[0].trim();
                 const rise = firstElm.nextElementSibling.nextElementSibling.innerText;
-                prev.push({ name: item.name, price, rise, sort: item.sort })
+                prev.push({ ...item, price, rise })
                 return prev
             }, []);
             console.info(JSON.stringify(res))
@@ -64,10 +75,12 @@ const superArr = {
         if(arr.length > 8) {
             arr = arr.sort((a, b) => a.sort - b.sort)
         }
+
+        let total = 0;
         const res = arr.reduce((prev, item) => {
-            // console.log(prev + item.name.toLocaleUpperCase() + ':' + item.price + ':' + item.rise + '  ')
-            return prev + item.name.toLocaleUpperCase() + ':' + item.price + ':' + item.rise + '  '
+            total += item.price * item.count;
+            return prev + item.name.toLocaleUpperCase() + ':' + item.price + ':' + item.rise + ':' + Number(Number(item.price) * item.count * 6.4).toFixed(2) + '  '
         }, '');
-        if(res) console.log(res)
+        if(res) console.log('total:' + Number(total * 6.4).toFixed(2) + ' ' + res)
     }, 1000);
 })();
