@@ -16,8 +16,8 @@ const superArr = {
     })
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'BNB', sort: 3, count: 31.4}, 
-            {name: 'CAKE', sort: 6, count: 35}
+            {name: 'BNB', sort: 3, count: 31.4, costPrice: 50}, // 
+            {name: 'CAKE', sort: 6, count: 35, costPrice: 11.4}
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -46,13 +46,13 @@ const superArr = {
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'badger', sort: 0, count: 28}, 
-            {name: 'dot', sort: 1, count: 2427}, 
-            {name: 'ksm', sort: 2, count: 167.75}, 
-            {name: 'xem', sort: 4, count: 3317},
-            {name: 'mdx', sort: 5, count: 1421}, 
-            {name: 'btc', sort: 7, count: 0}, 
-            {name: 'eth', sort: 8, count: 0}, 
+            {name: 'badger', sort: 0, count: 28, costPrice: 57}, 
+            {name: 'dot', sort: 1, count: 2427, costPrice: 4}, 
+            {name: 'ksm', sort: 2, count: 167.75, costPrice: 103}, // 214 * 7
+            {name: 'xem', sort: 4, count: 3317, costPrice: 0.47},
+            {name: 'mdx', sort: 5, count: 1421, costPrice: 3}, 
+            {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
+            {name: 'eth', sort: 8, count: 0, costPrice: 0}, 
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
