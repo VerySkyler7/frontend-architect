@@ -42,7 +42,7 @@ const superArr = {
     })
 
     await page.evaluate(() => {
-        const targetArr = [{name: 'dot', sort: 1}, {name: 'ksm', sort: 2}, {name: 'mdx', sort: 5}, {name: 'btc', sort: 7}, {name: 'eth', sort: 8}, {name: 'badger', sort: 0}, {name: 'pols', sort: 9}];
+        const targetArr = [{name: 'dot', sort: 1}, {name: 'ksm', sort: 2}, {name: 'mdx', sort: 5}, {name: 'btc', sort: 7}, {name: 'eth', sort: 8}, {name: 'badger', sort: 0}, {name: 'pols', sort: 9},  {name: 'xem', sort: -1}];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
                 const firstElm = document.querySelector(`#${item.name}usdt`).firstElementChild.firstElementChild;
