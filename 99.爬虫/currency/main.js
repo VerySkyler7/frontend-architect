@@ -16,7 +16,8 @@ const superArr = {
     })
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'BNB', sort: 3, count: 31.4, costPrice: 50}, // 
+            {name: 'BNB', sort: 3, count: 31.4, costPrice: 50},  
+            {name: 'XVS', sort: 4.5, count: 15, costPrice: 87},  
             {name: 'CAKE', sort: 6, count: 35, costPrice: 11.4}
         ];
         setInterval(() => {
@@ -50,7 +51,7 @@ const superArr = {
             {name: 'dot', sort: 1, count: 2427, costPrice: 4}, 
             {name: 'ksm', sort: 2, count: 167.75, costPrice: 103}, // 214 * 7
             {name: 'mdx', sort: 4, count: 1421, costPrice: 3}, 
-            {name: 'xem', sort: 5, count: 3317, costPrice: 0.47},
+            {name: 'xem', sort: 5, count: 1647, costPrice: 0.55},
             {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
             {name: 'eth', sort: 8, count: 0, costPrice: 0}, 
         ];
@@ -78,6 +79,9 @@ const superArr = {
 
         let total = 0;
         const res = arr.reduce((prev, item) => {
+
+            console.log(`${item.name}  利润：${Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2)}`)
+
             total += item.price * item.count;
             return prev + item.name.toLocaleUpperCase() + ':' + item.price + ':' + item.rise + ':' + Number(Number(item.price) * item.count * 6.4).toFixed(2) + '  '
         }, '');
