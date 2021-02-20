@@ -80,10 +80,10 @@ const superArr = {
         let total = 0;
         const res = arr.reduce((prev, item) => {
 
-            console.log(`${item.name}  利润：${Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2)}`)
+            console.log(`${item.name.toLocaleLowerCase()}  利润：${Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2)}`)
 
             total += item.price * item.count;
-            return prev + item.name.toLocaleUpperCase() + ':' + item.price + ':' + item.rise + ':' + Number(Number(item.price) * item.count * 6.4).toFixed(2) + '  '
+            return prev + item.name.toLocaleLowerCase() + ':' + item.price + ':' + item.rise + ':' + Number(Number(item.price) * item.count * 6.4).toFixed(2) + '  '
         }, '');
         if(res) console.log('total:' + Number(total * 6.4).toFixed(2) + ' ' + res)
     }, 1000);
