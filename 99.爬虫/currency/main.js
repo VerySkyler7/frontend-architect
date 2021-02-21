@@ -100,10 +100,10 @@ let transporter = nodemailer.createTransport({
         }, '');
         if(res) {
             total = Number(total * 6.4).toFixed(2);
-            if(parseInt(total / 10000) !== parseInt(superData.currentTotal / 10000)) { // 如果万数发生了变化 则发邮件
+            if(total - superData.currentTotal > 5000) { // 当波动大于1万时 发一个邮件
+                superData.currentTotal = total;
                 sendMail('total:' + total + ' ' + res)
             }
-            superData.currentTotal = total;
             console.log('total:' + total + ' ' + res)
         }
     }, 1000);
