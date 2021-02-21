@@ -1,7 +1,10 @@
 const puppeteer = require('puppeteer');
 const nodemailer = require('nodemailer');
 
-const superArr = {
+
+// 存放所有数据
+const superData = {
+    currentTotal: 0, // 当前总资产
     binance: [],
     huoBi: []
 };
@@ -22,7 +25,7 @@ let transporter = nodemailer.createTransport({
     const page = await browser.newPage()
     await page.goto('https://cn.investing.com/crypto/currencies', { timeout: 9999999 })
     page.on('console', msg => {
-        if (msg._type === 'info') superArr.binance = JSON.parse(msg._text)
+        if (msg._type === 'info') superData.binance = JSON.parse(msg._text)
     })
     await page.evaluate(() => {
         const targetArr = [
@@ -52,12 +55,12 @@ let transporter = nodemailer.createTransport({
     await page.goto('https://www.huobi.com/zh-cn/markets/', { timeout: 9999999 });
     
     page.on('console', msg => {
-        if (msg._type === 'info')  superArr.huoBi = JSON.parse(msg._text)
+        if (msg._type === 'info')  superData.huoBi = JSON.parse(msg._text)
     })
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'badger', sort: 0, count: 28, costPrice: 57}, 
+            {name: 'badger', sort: 4.5, count: 28, costPrice: 57}, 
             {name: 'dot', sort: 1, count: 2427, costPrice: 4}, 
             {name: 'ksm', sort: 2, count: 160.75, costPrice: 103}, // 214 * 7
             {name: 'mdx', sort: 4, count: 1421, costPrice: 3}, 
@@ -82,7 +85,7 @@ let transporter = nodemailer.createTransport({
 
 ; (() => {
     setInterval(() => {
-        let arr = superArr.huoBi.concat(superArr.binance);
+        let arr = superData.huoBi.concat(superData.binance);
         if(arr.length > 8) {
             arr = arr.sort((a, b) => a.sort - b.sort)
         }
@@ -96,8 +99,12 @@ let transporter = nodemailer.createTransport({
             return prev + item.name.toLocaleLowerCase() + ':' + item.price + ':' + item.rise + ':' + Number(Number(item.price) * item.count * 6.4).toFixed(2) + '  '
         }, '');
         if(res) {
-            console.log('total:' + Number(total * 6.4).toFixed(2) + ' ' + res)
-            // sendMail('total:' + Number(total * 6.4).toFixed(2) + ' ' + res)
+            total = Number(total * 6.4).toFixed(2);
+            if(parseInt(total / 10000) !== parseInt(superData.currentTotal / 10000)) { // 如果万数发生了变化 则发邮件
+                sendMail('total:' + total + ' ' + res)
+            }
+            superData.currentTotal = total;
+            console.log('total:' + total + ' ' + res)
         }
     }, 1000);
 })();
