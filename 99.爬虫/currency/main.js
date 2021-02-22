@@ -19,6 +19,7 @@ let transporter = nodemailer.createTransport({
     }
 });
 
+// 定时爬取币安网数据
 (async () => {
     const browser = await puppeteer.launch({ headless: true })
     
@@ -49,6 +50,7 @@ let transporter = nodemailer.createTransport({
 
 })();
 
+// 定时爬取火币网数据
 (async () => {
     const browser = await puppeteer.launch({ headless: true })
     const page = await browser.newPage();
@@ -83,29 +85,32 @@ let transporter = nodemailer.createTransport({
 
 })();
 
-; (() => {
+// 定时计算爬取后的数据
+(() => {
     setInterval(() => {
         let arr = superData.huoBi.concat(superData.binance);
         if(arr.length > 8) {
             arr = arr.sort((a, b) => a.sort - b.sort)
         }
 
-        let total = 0;
         const res = arr.reduce((prev, item) => {
+            prev.total += item.price * item.count;
+            prev.price += item.name.toLocaleLowerCase() 
+                            + '  price：' + item.price 
+                            + '  costPrice：' + item.costPrice
+                            + '  rise：' + item.rise 
+                            + '  total：' + Number(Number(item.price) * item.count * 6.4).toFixed(2) 
+                            + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2) + '\r\n'
+            return prev
+        }, {total: 0, price: ''});
 
-            console.log(`${item.name.toLocaleLowerCase()}  利润：${Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2)}`)
-
-            total += item.price * item.count;
-            return prev + item.name.toLocaleLowerCase() + ':' + item.price + ':' + item.rise + ':' + Number(Number(item.price) * item.count * 6.4).toFixed(2) + '  '
-        }, '');
-
-        if(res) {
-            total = Number(total * 6.4).toFixed(2);
-            if(total - superData.currentTotal > 5000) { // 当波动大于1万时 发一个邮件
-                superData.currentTotal = total;
-                sendMail('total:' + total + ' ' + res)
+        if(res.total) {
+            res.total = Number(res.total * 6.4).toFixed(2);
+            if(Math.abs(res.total - superData.currentTotal) > 5000) { // 当波动大于1万时 发一个邮件
+                superData.currentTotal = res.total;
+                sendMail(res.price + 'total：' + res.total)
             }
-            console.log('total:' + total + ' ' + res)
+            console.log(res.price + 'total：' + res.total)
         }
     }, 1000);
 })();
