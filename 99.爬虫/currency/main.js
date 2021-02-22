@@ -95,12 +95,12 @@ let transporter = nodemailer.createTransport({
 
         const res = arr.reduce((prev, item) => {
             prev.total += item.price * item.count;
-            prev.price += item.name.toLocaleLowerCase() 
+            prev.price += item.name.toLocaleLowerCase()
                             + '  price：' + item.price 
                             + '  costPrice：' + item.costPrice
                             + '  rise：' + item.rise 
                             + '  total：' + Number(Number(item.price) * item.count * 6.4).toFixed(2) 
-                            + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2) + '\r\n'
+                            + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2) + '<br>\r\n'
             return prev
         }, {total: 0, price: ''});
 
@@ -108,7 +108,7 @@ let transporter = nodemailer.createTransport({
             res.total = Number(res.total * 6.4).toFixed(2);
             if(Math.abs(res.total - superData.currentTotal) > 5000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
-                sendMail(res.price + 'total：' + res.total)
+                sendMail('total：' + res.total + '<br>' + res.price + 'total：' + res.total)
             }
             console.log(res.price + 'total：' + res.total)
         }
