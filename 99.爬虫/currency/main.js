@@ -31,7 +31,7 @@ let transporter = nodemailer.createTransport({
     await page.evaluate(() => {
         const targetArr = [
             {name: 'BNB', sort: 4, count: 31.4, costPrice: 50},  
-            {name: 'XVS', sort: 4.5, count: 32.9, costPrice: 87},  
+            {name: 'XVS', sort: 0.5, count: 32.9, costPrice: 87},  
             {name: 'CAKE', sort: 6, count: 35, costPrice: 11.4}
         ];
         setInterval(() => {
@@ -62,7 +62,7 @@ let transporter = nodemailer.createTransport({
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'badger', sort: 4.5, count: 28, costPrice: 57}, 
+            {name: 'badger', sort: 0, count: 28, costPrice: 57}, 
             {name: 'dot', sort: 1, count: 2427, costPrice: 4}, 
             {name: 'ksm', sort: 2, count: 160.75, costPrice: 103}, // 214 * 7
             {name: 'mdx', sort: 3, count: 1421, costPrice: 3}, 
