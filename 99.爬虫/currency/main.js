@@ -108,7 +108,7 @@ let transporter = nodemailer.createTransport({
             res.total = Number(res.total * 6.4).toFixed(2);
             if(Math.abs(res.total - superData.currentTotal) > 5000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
-                sendMail('total：' + res.total + '<br>' + res.price + 'total：' + res.total)
+                sendMail(res.total, res.price + 'total：' + res.total)
             }
             console.log(res.price + 'total：' + res.total)
         }
@@ -116,12 +116,12 @@ let transporter = nodemailer.createTransport({
 })();
 
 
-function sendMail(msg) {
+function sendMail(subject, html) {
     let mailOptions = {
         from: 'wangxpengx@163.com', // sender address
         to: '379522872@qq.com', // list of receivers
-        subject: 'coin', // Subject line
-        html: msg // html body
+        subject, // Subject line
+        html // html body
     };
     
     transporter.sendMail(mailOptions, (error, info) => {
