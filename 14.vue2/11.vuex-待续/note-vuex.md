@@ -26,12 +26,16 @@
 3. 同样在组件中获取store的getters的方法时，真正获取的是抽象组件的computed，此时computed对应的方法会被执行，方法内部的data会收集当前的computed watcher和渲染watcher。
 4. 因此当store的state发生变化时，真正变化的是抽象组件的响应式数据，会触发对应的watcher进行渲染。
 
-## vuex 更改数据的用法及实现原理
-```
-
-```
-
 ## action和mutation的区别
 1. mutation是修改state的唯一途径，mutation只能同步修改state。它相当于state的管理员，通过mutation可以监管state的变化。如果通过异步修改state，在vuex的浏览器插件中无法监测到state的变化，严格模式下会报错。
 2. action是通过commit触发mutation修改state，action可以异步调用commit，同时浏览器vuex可以监听到state的变化。所以异步代码适合放到action中。
 3. 浏览器vuex插件只能查看mutation的变化。
+
+待续：：
+第六章 Vuex原理 任务70 actions和mutations原理
+
+router没听
+
+项目实战已做完
+
+面试题讲解没听

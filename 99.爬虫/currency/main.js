@@ -70,6 +70,7 @@ let transporter = nodemailer.createTransport({
             {name: 'ht', sort: 6.5, count: 10, costPrice: 12},
             {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
             {name: 'eth', sort: 8, count: 0, costPrice: 0}, 
+            {name: 'pols', sort: 8, count: 0, costPrice: 0}, 
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -107,7 +108,7 @@ let transporter = nodemailer.createTransport({
 
         if(res.total) {
             res.total = Number(res.total * 6.4).toFixed(2);
-            if(Math.abs(res.total - superData.currentTotal) > 10000) { // 当波动大于1万时 发一个邮件
+            if(Math.abs(res.total - superData.currentTotal) > 20000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
                 sendMail(res.total, res.price + 'total：' + res.total)
             }
