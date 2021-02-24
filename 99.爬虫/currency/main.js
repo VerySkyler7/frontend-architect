@@ -67,7 +67,7 @@ let transporter = nodemailer.createTransport({
             {name: 'ksm', sort: 2, count: 160.75, costPrice: 103}, // 214 * 7
             {name: 'mdx', sort: 3, count: 1421, costPrice: 3}, 
             {name: 'ht', sort: 6.5, count: 10, costPrice: 12},
-            {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
+            {name: 'btc', sort: 7, count: 0.0082, costPrice: 0}, 
             {name: 'eth', sort: 8, count: 0, costPrice: 0}, 
             {name: 'pols', sort: 8, count: 0, costPrice: 0}, 
         ];
