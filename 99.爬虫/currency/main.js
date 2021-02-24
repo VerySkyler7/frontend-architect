@@ -31,7 +31,7 @@ let transporter = nodemailer.createTransport({
     await page.evaluate(() => {
         const targetArr = [
             {name: 'BNB', sort: 4, count: 35, costPrice: 50},  
-            {name: 'XVS', sort: 0.5, count: 32.9, costPrice: 87},  
+            {name: 'JEX', sort: 0.5, count: 54388, costPrice: 0.028634, price: 0.028634, rise: '+61.62%'},  
             {name: 'CAKE', sort: 6, count: 35, costPrice: 11.4}
         ];
         setInterval(() => {
@@ -85,6 +85,38 @@ let transporter = nodemailer.createTransport({
     });
 
 })();
+
+
+// 定时爬取非小号数据
+// (async () => {
+//     const browser = await puppeteer.launch({ headless: true })
+    
+//     const page = await browser.newPage()
+//     await page.goto('https://www.feixiaohao.com/currencies/jex/', { timeout: 9999999 })
+//     page.on('console', msg => {
+//         if (msg._type === 'info') superData.binance = JSON.parse(msg._text)
+//     })
+//     await page.evaluate(() => {
+//         const targetArr = [
+//             {name: 'BNB', sort: 4, count: 35, costPrice: 50},  
+//             {name: 'XVS', sort: 0.5, count: 32.9, costPrice: 87},  
+//             {name: 'CAKE', sort: 6, count: 35, costPrice: 11.4}
+//         ];
+//         setInterval(() => {
+//             const res = targetArr.reduce((prev, item) => {
+//                 const nameElm = document.querySelector(`td[title=${item.name}]`);
+//                 if (!nameElm) return prev;
+
+//                 const price = nameElm.nextElementSibling.innerText;
+//                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
+//                 prev.push({ ...item, price, rise })
+//                 return prev
+//             }, []);
+//             console.info(JSON.stringify(res))
+//         }, 1000);
+//     });
+
+// })();
 
 // 定时计算爬取后的数据
 (() => {
