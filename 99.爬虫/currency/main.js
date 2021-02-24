@@ -37,7 +37,10 @@ let transporter = nodemailer.createTransport({
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
                 const nameElm = document.querySelector(`td[title=${item.name}]`);
-                if (!nameElm) return prev;
+                if (!nameElm) {
+                    prev.push(item)
+                    return prev;
+                };
 
                 const price = nameElm.nextElementSibling.innerText;
                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
