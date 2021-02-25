@@ -30,9 +30,9 @@ let transporter = nodemailer.createTransport({
     })
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'BNB', sort: 4, count: 31.4, costPrice: 50},  
-            {name: 'XVS', sort: 0.5, count: 32.9, costPrice: 87},  
-            {name: 'CAKE', sort: 6, count: 35, costPrice: 11.4}
+            {name: 'BNB', sort: 4, count: 36, costPrice: 50},  
+            {name: 'XVS', sort: 0.5, count: 0, costPrice: 87},  
+            {name: 'CAKE', sort: 6, count: 35.6, costPrice: 11.4}
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -63,10 +63,10 @@ let transporter = nodemailer.createTransport({
     await page.evaluate(() => {
         const targetArr = [
             {name: 'badger', sort: 0, count: 28, costPrice: 57}, 
-            {name: 'dot', sort: 1, count: 2427, costPrice: 4}, 
-            {name: 'ksm', sort: 2, count: 160.75, costPrice: 103}, // 214 * 7
-            {name: 'mdx', sort: 3, count: 1421, costPrice: 3}, 
-            {name: 'xem', sort: 5, count: 1647, costPrice: 0.55},
+            {name: 'dot', sort: 1, count: 2430, costPrice: 4}, 
+            {name: 'ksm', sort: 2, count: 161.29, costPrice: 103}, // 214 * 7
+            {name: 'mdx', sort: 3, count: 1669, costPrice: 3}, 
+            {name: 'xem', sort: 5, count: 0, costPrice: 0.55},
             {name: 'ht', sort: 6.5, count: 10, costPrice: 12},
             {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
             {name: 'eth', sort: 8, count: 0, costPrice: 0}, 
@@ -110,7 +110,7 @@ let transporter = nodemailer.createTransport({
             res.total = Number(res.total * 6.4).toFixed(2);
             if(Math.abs(res.total - superData.currentTotal) > 20000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
-                sendMail(res.total, res.price + 'total：' + res.total)
+                // sendMail(res.total, res.price + 'total：' + res.total)
             }
             console.log(res.price + 'total：' + res.total)
         }
