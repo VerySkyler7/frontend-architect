@@ -31,13 +31,15 @@ let transporter = nodemailer.createTransport({
     await page.evaluate(() => {
         const targetArr = [
             {name: 'BNB', sort: 4, count: 36, costPrice: 50},  
-            {name: 'XVS', sort: 0.5, count: 0, costPrice: 87},  
             {name: 'CAKE', sort: 6, count: 35.6, costPrice: 11.4}
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
                 const nameElm = document.querySelector(`td[title=${item.name}]`);
-                if (!nameElm) return prev;
+                if (!nameElm) {
+                    prev.push(item)
+                    return prev;
+                };
 
                 const price = nameElm.nextElementSibling.innerText;
                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
@@ -66,9 +68,8 @@ let transporter = nodemailer.createTransport({
             {name: 'dot', sort: 1, count: 2430, costPrice: 4}, 
             {name: 'ksm', sort: 2, count: 161.29, costPrice: 103}, // 214 * 7
             {name: 'mdx', sort: 3, count: 1669, costPrice: 3}, 
-            {name: 'xem', sort: 5, count: 0, costPrice: 0.55},
             {name: 'ht', sort: 6.5, count: 10, costPrice: 12},
-            {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
+            {name: 'btc', sort: 7, count: 0.0082, costPrice: 0}, 
             {name: 'eth', sort: 8, count: 0, costPrice: 0}, 
             {name: 'pols', sort: 8, count: 0, costPrice: 0}, 
         ];
@@ -86,6 +87,38 @@ let transporter = nodemailer.createTransport({
     });
 
 })();
+
+
+// 定时爬取非小号数据
+// (async () => {
+//     const browser = await puppeteer.launch({ headless: true })
+    
+//     const page = await browser.newPage()
+//     await page.goto('https://www.feixiaohao.com/currencies/jex/', { timeout: 9999999 })
+//     page.on('console', msg => {
+//         if (msg._type === 'info') superData.binance = JSON.parse(msg._text)
+//     })
+//     await page.evaluate(() => {
+//         const targetArr = [
+//             {name: 'BNB', sort: 4, count: 35, costPrice: 50},  
+//             {name: 'XVS', sort: 0.5, count: 32.9, costPrice: 87},  
+//             {name: 'CAKE', sort: 6, count: 35, costPrice: 11.4}
+//         ];
+//         setInterval(() => {
+//             const res = targetArr.reduce((prev, item) => {
+//                 const nameElm = document.querySelector(`td[title=${item.name}]`);
+//                 if (!nameElm) return prev;
+
+//                 const price = nameElm.nextElementSibling.innerText;
+//                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
+//                 prev.push({ ...item, price, rise })
+//                 return prev
+//             }, []);
+//             console.info(JSON.stringify(res))
+//         }, 1000);
+//     });
+
+// })();
 
 // 定时计算爬取后的数据
 (() => {
