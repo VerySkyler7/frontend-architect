@@ -31,7 +31,7 @@ let transporter = nodemailer.createTransport({
     await page.evaluate(() => {
         const targetArr = [
             {name: 'BNB', sort: 4, count: 36, costPrice: 50},  
-            {name: 'CAKE', sort: 6, count: 635, costPrice: 11.4}
+            {name: 'CAKE', sort: 6, count: 635, costPrice: 12.1}
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
