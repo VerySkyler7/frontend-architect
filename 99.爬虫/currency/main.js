@@ -64,7 +64,6 @@ let transporter = nodemailer.createTransport({
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'badger', sort: 0, count: 28, costPrice: 57}, 
             {name: 'dot', sort: 1, count: 2430, costPrice: 4}, 
             {name: 'ksm', sort: 2, count: 161.29, costPrice: 103}, // 214 * 7
             {name: 'mdx', sort: 3, count: 1669, costPrice: 3}, 
