@@ -6,7 +6,10 @@ const nodemailer = require('nodemailer');
 const superData = {
     currentTotal: 0, // 当前总资产
     binance: [],
-    huoBi: []
+    huoBi: [],
+    temp: [
+        {name: 'bscx', sort: 10, count: 200, costPrice: 18.5, price:  18.5}, 
+    ]
 };
 
 let transporter = nodemailer.createTransport({
@@ -30,8 +33,8 @@ let transporter = nodemailer.createTransport({
     })
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'BNB', sort: 4, count: 36, costPrice: 50},  
-            {name: 'CAKE', sort: 6, count: 635, costPrice: 12.1}
+            {name: 'BNB', sort: 3, count: 25, costPrice: 50},  
+            {name: 'CAKE', sort: 4, count: 622, costPrice: 12.1}
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -64,13 +67,11 @@ let transporter = nodemailer.createTransport({
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'dot', sort: 1, count: 2430, costPrice: 4}, 
-            {name: 'ksm', sort: 2, count: 161.29, costPrice: 103}, // 214 * 7
-            {name: 'ht', sort: 6.5, count: 10, costPrice: 12},
-            {name: 'btc', sort: 7, count: 0.0082, costPrice: 0}, 
-            {name: 'eth', sort: 8, count: 0, costPrice: 0}, 
-            {name: 'mdx', sort: 8, count: 0, costPrice: 3}, 
-            {name: 'badger', sort: 8, count: 0, costPrice: 57}, 
+            {name: 'dot', sort: 1, count: 2442, costPrice: 4}, 
+            {name: 'ksm', sort: 2, count: 162.14, costPrice: 103}, // 214 * 7
+            {name: 'ftt', sort: 5, count: 10, costPrice: 32.1}, 
+            {name: 'eth', sort: 6, count: 1.84, costPrice: 1840},
+            {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -88,41 +89,10 @@ let transporter = nodemailer.createTransport({
 })();
 
 
-// 定时爬取非小号数据
-// (async () => {
-//     const browser = await puppeteer.launch({ headless: true })
-    
-//     const page = await browser.newPage()
-//     await page.goto('https://www.feixiaohao.com/currencies/jex/', { timeout: 9999999 })
-//     page.on('console', msg => {
-//         if (msg._type === 'info') superData.binance = JSON.parse(msg._text)
-//     })
-//     await page.evaluate(() => {
-//         const targetArr = [
-//             {name: 'BNB', sort: 4, count: 35, costPrice: 50},  
-//             {name: 'XVS', sort: 0.5, count: 32.9, costPrice: 87},  
-//             {name: 'CAKE', sort: 6, count: 35, costPrice: 11.4}
-//         ];
-//         setInterval(() => {
-//             const res = targetArr.reduce((prev, item) => {
-//                 const nameElm = document.querySelector(`td[title=${item.name}]`);
-//                 if (!nameElm) return prev;
-
-//                 const price = nameElm.nextElementSibling.innerText;
-//                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
-//                 prev.push({ ...item, price, rise })
-//                 return prev
-//             }, []);
-//             console.info(JSON.stringify(res))
-//         }, 1000);
-//     });
-
-// })();
-
 // 定时计算爬取后的数据
 (() => {
     setInterval(() => {
-        let arr = superData.huoBi.concat(superData.binance);
+        let arr = superData.huoBi.concat(superData.binance).concat(superData.temp);
         if(arr.length > 8) {
             arr = arr.sort((a, b) => a.sort - b.sort)
         }
