@@ -33,8 +33,8 @@ let transporter = nodemailer.createTransport({
     })
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'BNB', sort: 3, count: 25, costPrice: 50},  
-            {name: 'CAKE', sort: 4, count: 622, costPrice: 12.1}
+            {name: 'BNB', sort: 3, count: 41.2, costPrice: 50},  
+            {name: 'CAKE', sort: 4, count: 666, costPrice: 12.1}
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -67,11 +67,10 @@ let transporter = nodemailer.createTransport({
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'dot', sort: 1, count: 2442, costPrice: 4}, 
-            {name: 'ksm', sort: 2, count: 162.14, costPrice: 103}, // 214 * 7
-            {name: 'ftt', sort: 5, count: 10, costPrice: 32.1}, 
-            {name: 'eth', sort: 6, count: 1.84, costPrice: 1840},
+            {name: 'dot', sort: 1, count: 2444, costPrice: 4}, 
+            {name: 'ksm', sort: 2, count: 162.3, costPrice: 103}, // 214 * 7
             {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
+            {name: 'eth', sort: 6, count: 0, costPrice: 1840},
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -104,7 +103,8 @@ let transporter = nodemailer.createTransport({
                             + '  costPrice：' + item.costPrice
                             + '  rise：' + item.rise 
                             + '  total：' + Number(Number(item.price) * item.count * 6.4).toFixed(2) 
-                            + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2) + '<br>\r\n'
+                            + '  count：' + item.count + '<br>\r\n'
+                            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2) + '<br>\r\n'
             return prev
         }, {total: 0, price: ''});
 
