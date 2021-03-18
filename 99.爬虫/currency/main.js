@@ -8,7 +8,7 @@ const superData = {
     binance: [],
     huoBi: [],
     temp: [
-        {name: 'bscx', sort: 10, count: 200, costPrice: 18.5, price:  18.5}, 
+        {name: 'bscx', sort: 10, count: 200, costPrice: 12.3, price:  18.5}, 
     ]
 };
 
@@ -33,8 +33,8 @@ let transporter = nodemailer.createTransport({
     })
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'BNB', sort: 3, count: 41.2, costPrice: 50},  
-            {name: 'CAKE', sort: 4, count: 666, costPrice: 12.1}
+            {name: 'BNB', sort: 3, count: 41.75, costPrice: 50},  
+            {name: 'CAKE', sort: 4, count: 683, costPrice: 12.1}
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -67,8 +67,8 @@ let transporter = nodemailer.createTransport({
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'dot', sort: 1, count: 2444, costPrice: 4}, 
-            {name: 'ksm', sort: 2, count: 162.3, costPrice: 103}, // 214 * 7
+            {name: 'dot', sort: 1, count: 2450, costPrice: 4}, 
+            {name: 'ksm', sort: 2, count: 162.7, costPrice: 103}, // 214 * 7
             {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
             {name: 'eth', sort: 6, count: 0, costPrice: 1840},
         ];
@@ -102,14 +102,14 @@ let transporter = nodemailer.createTransport({
                             + '  price：' + item.price 
                             + '  costPrice：' + item.costPrice
                             + '  rise：' + item.rise 
-                            + '  total：' + Number(Number(item.price) * item.count * 6.4).toFixed(2) 
+                            + '  total：' + Number(Number(item.price) * item.count * 6.5).toFixed(2) 
                             + '  count：' + item.count + '<br>\r\n'
-                            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.4).toFixed(2) + '<br>\r\n'
+                            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.5).toFixed(2) + '<br>\r\n'
             return prev
         }, {total: 0, price: ''});
 
         if(res.total) {
-            res.total = Number(res.total * 6.4).toFixed(2);
+            res.total = Number(res.total * 6.5).toFixed(2);
             if(Math.abs(res.total - superData.currentTotal) > 20000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
                 sendMail(res.total, res.price + 'total：' + res.total)
