@@ -8,7 +8,7 @@ const superData = {
     binance: [],
     huoBi: [],
     temp: [
-        {name: 'bscx', sort: 10, count: 200, costPrice: 12.3, price:  18.5}, 
+        {name: 'bscx', sort: 10, count: 200, costPrice: 18.5, price:  12.3}, 
     ]
 };
 
