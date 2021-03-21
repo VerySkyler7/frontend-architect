@@ -4,7 +4,8 @@ const puppeteer = require('puppeteer');
 const handleData = require('./handleData');
 
 // 抓取数据的起始位置
-let start = 88;
+let start = 42;
+// 194
 // 清理数据的时间间隔
 let handleInterval = 5 * 60 * 1000;
 // 当前视频索引
@@ -27,7 +28,7 @@ handleData(handleInterval);
     for (let i = start; i < 20000; i++) {
         try {
             page = i + 1;
-            const detailUrl = 'https://www.xvideos.com/new/' + i;
+            const detailUrl = 'https://www.xvideos.com/?k=%E5%89%A7%E6%83%85&p=' + i;
             await runOneList(detailUrl, browser, list);
         } catch (error) {
             console.log('================================', error);
