@@ -112,7 +112,7 @@ let transporter = nodemailer.createTransport({
             res.total = Number(res.total * 6.5).toFixed(2);
             if(Math.abs(res.total - superData.currentTotal) > 20000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
-                sendMail(res.total, res.price + 'total：' + res.total)
+                // sendMail(res.total, res.price + 'total：' + res.total)
             }
             console.log(res.price + 'total：' + res.total)
         }
