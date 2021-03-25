@@ -28,9 +28,11 @@ function startWork() {
         if (err) console.log(err)
     })
     console.log(list.length)
-    list = list.filter(item => item.percent > 7 && item.praise > 1000 && item.critical < 100000)
+    list = list.filter(item => item.percent > 3 && item.praise > 1000 && item.critical < 100000)
 
     fs.writeFile(path.resolve(__dirname, 'jingxuan.json'), JSON.stringify(list), err => {
         if (err) console.log(err)
     })
 }
+
+// startWork()
