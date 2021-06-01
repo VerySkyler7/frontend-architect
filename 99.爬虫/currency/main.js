@@ -24,43 +24,44 @@ let transporter = nodemailer.createTransport({
 });
 
 // 定时爬取币安网数据
-(async () => {
-    const browser = await puppeteer.launch({ headless: true })
+// (async () => {
+//     const browser = await puppeteer.launch({ headless: true })
     
-    const page = await browser.newPage()
-    await page.goto('https://cn.investing.com/crypto/currencies', { timeout: 9999999 })
-    page.on('console', msg => {
-        if (msg._type === 'info') superData.binance = JSON.parse(msg._text)
-    })
-    await page.evaluate(() => {
-        const targetArr = [
-            {name: 'BNB', sort: 3, count: 30, costPrice: 50},  
-            {name: 'CAKE', sort: 4, count: 500, costPrice: 12.1},
-        ];
-        setInterval(() => {
-            const res = targetArr.reduce((prev, item) => {
-                const nameElm = document.querySelector(`td[title=${item.name}]`);
-                if (!nameElm) {
-                    prev.push(item)
-                    return prev;
-                };
+//     const page = await browser.newPage()
+//     await page.goto('https://cn.investing.com/crypto/currencies', { timeout: 9999999 })
+//     page.on('console', msg => {
+//         if (msg._type === 'info') superData.binance = JSON.parse(msg._text)
+//     })
+//     await page.evaluate(() => {
+//         const targetArr = [
+//             {name: 'BNB', sort: 3, count: 30, costPrice: 50},  
+//             {name: 'CAKE', sort: 4, count: 650, costPrice: 12.1},
+//             {name: 'BUNNY', sort: 4, count: 78, costPrice: 8},
+//         ];
+//         setInterval(() => {
+//             const res = targetArr.reduce((prev, item) => {
+//                 const nameElm = document.querySelector(`td[title=${item.name}]`);
+//                 if (!nameElm) {
+//                     prev.push(item)
+//                     return prev;
+//                 };
 
-                const price = nameElm.nextElementSibling.innerText;
-                const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
-                prev.push({ ...item, price, rise })
-                return prev
-            }, []);
-            console.info(JSON.stringify(res))
-        }, 1000);
-    });
+//                 const price = nameElm.nextElementSibling.innerText;
+//                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
+//                 prev.push({ ...item, price, rise })
+//                 return prev
+//             }, []);
+//             console.info(JSON.stringify(res))
+//         }, 1000);
+//     });
 
-})();
+// })();
 
 // 定时爬取火币网数据
 (async () => {
     const browser = await puppeteer.launch({ headless: true })
     const page = await browser.newPage();
-    await page.goto('https://www.huobi.com/zh-cn/markets/', { timeout: 9999999 });
+    await page.goto('https://www.huobi.com/en-us/markets/', { timeout: 9999999 });
     
     page.on('console', msg => {
         if (msg._type === 'info')  superData.huoBi = JSON.parse(msg._text)
@@ -68,12 +69,14 @@ let transporter = nodemailer.createTransport({
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'dot', sort: 1, count: 2508, costPrice: 4}, 
-            {name: 'ksm', sort: 2, count: 118, costPrice: 103}, // 214 * 7
+            {name: 'dot', sort: 1, count: 2450, costPrice: 4}, 
+            {name: 'ksm', sort: 2, count: 127, costPrice: 103}, // 214 * 7
             {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
             {name: 'eth', sort: 6, count: 0, costPrice: 1840},
-            {name: 'sol', sort: 5, count: 10, costPrice: 0},
+            {name: 'sol', sort: 5, count: 8, costPrice: 0},
             {name: 'doge', sort: 11, count: 0, costPrice: 0},
+            {name: 'matic', sort: 11, count: 0, costPrice: 0},
+            {name: 'near', sort: 11, count: 0, costPrice: 0},
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
