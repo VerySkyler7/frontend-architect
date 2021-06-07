@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const nodemailer = require('nodemailer');
+const { getKsm2DotRatio } = require('./captured');
 
 
 // 存放所有数据
@@ -12,16 +12,6 @@ const superData = {
         {name: 'ray', sort: 10, count: 205, costPrice: 0, price:  14}, 
     ]
 };
-
-let transporter = nodemailer.createTransport({
-    host: 'smtp.163.com',
-    port: 465,
-    secure: true, // true for 465, false for other ports
-    auth: {
-        user: 'wangxpengx@163.com', // generated ethereal user
-        pass: 'ONRXIIYHFIVOWVNW' // generated ethereal password
-    }
-});
 
 // 定时爬取币安网数据
 // (async () => {
@@ -77,6 +67,7 @@ let transporter = nodemailer.createTransport({
             {name: 'doge', sort: 11, count: 0, costPrice: 0},
             {name: 'matic', sort: 11, count: 0, costPrice: 0},
             {name: 'near', sort: 11, count: 0, costPrice: 0},
+            {name: 'shib', sort: 11, count: 0, costPrice: 0},
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -103,6 +94,7 @@ let transporter = nodemailer.createTransport({
         }
 
         const res = arr.reduce((prev, item) => {
+            getKsm2DotRatio(item.name, item.price); // 获取ksm和dot的比例
             prev.total += item.price * item.count;
             prev.price += item.name.toLocaleLowerCase()
                             + '  price：' + item.price 
@@ -124,22 +116,3 @@ let transporter = nodemailer.createTransport({
         }
     }, 1000);
 })();
-
-
-function sendMail(subject, html) {
-    let mailOptions = {
-        from: 'wangxpengx@163.com', // sender address
-        to: '379522872@qq.com', // list of receivers
-        subject, // Subject line
-        html // html body
-    };
-    
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-        console.log('Message sent: %s', info.messageId);
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    
-    });
-}
