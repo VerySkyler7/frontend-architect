@@ -87,7 +87,6 @@ lifeCycleHooks.forEach(hook => {
 
 strats.components = function(parentVal, childVal) {
     // Vue.options.components
-    debugger
     let options = Object.create(parentVal); // 根据父对象构造一个新对象 options.__proto__= parentVal
     if (childVal) {
         for (let key in childVal) {

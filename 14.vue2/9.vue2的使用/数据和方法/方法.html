@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="id">
+        {{name}}--{{age}}
+        <button @click="changeName">change name</button>
+        <button @click="changeAge">change age</button>
+    </div>
+    <script type="text/javascript">
+        new Vue({
+            el: "#id",
+            data: {
+                name: {},
+                age: 0,
+            },
+            methods: {
+                changeName() {
+                    this.name = {name: 1}
+                },
+                changeAge() {
+                    this.age = 12
+                }
+            },
+            watch: {
+                name(){
+                    console.log('name has changed')
+                },
+                age() {
+                    console.log('age has changed')
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -20,7 +20,6 @@ function createComponent(vm, tag, data, key, children, Ctor) {
     data.hook = { // 等会渲染组件时 需要调用此初始化方法
         init(vnode){
            let vm = vnode.componentInstance =  new Ctor({_isComponent:true}); // new Sub 会用此选项和组件的配置进行合并
-           debugger;
            vm.$mount(); // 组件挂载完成后 会在 vnode.componentInstance.$el => <button>
         }
     }

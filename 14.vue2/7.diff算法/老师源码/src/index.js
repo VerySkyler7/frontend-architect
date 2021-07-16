@@ -32,7 +32,6 @@ let oldTemplate = `<div>
 let vm1 = new Vue({ data: { message: 'hello world' } })
 const render1 = compileToFunction(oldTemplate)
 const oldVnode = render1.call(vm1); // 虚拟dom
-debugger
 document.body.appendChild(createElm(oldVnode));
 
 // v-if   v-else
@@ -51,18 +50,7 @@ setTimeout(() => {
     patch(oldVnode, newVnode);
 }, 2000);
 
-
-
-
-
-
-
-
-
-
 export default Vue;
-
-
 
 // init 主要做了状态的初始化 （数据劫持 对象 、 数组）
 // $mount 找render方法  （template-> render函数  ast => codegen =>字符串）

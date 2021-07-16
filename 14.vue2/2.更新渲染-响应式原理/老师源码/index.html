@@ -10,7 +10,7 @@
 <body>
     <!-- 'hello' + arr + 'world' -->
     <div id="app">
-        {{arr}}
+        {{name}}:{{age}}
     </div>
     <script src="dist/vue.js"></script>
     <script>
@@ -19,10 +19,9 @@
             data() {
                 //this = vm
                 return {
-                    // name: 'zf',
-                    // age: 11,
+                    name: 'zf',
+                    age: 11,
                     // obj: {a:{a:1}},// 最外层的数组进行了依赖收集  JSON.stringify()
-                    arr:{a:1}
                 }
             }
         });
@@ -41,9 +40,9 @@
         //     // vm._update(vm._render()); // 重新调用render方法产生虚拟dom， 目前还没有diff
         // }, 1000);
         setTimeout(() => {
-           arr = vm.arr
-            arr.a = 2
-        }, 1000);
+           vm.name = 'wp'
+           vm.age = 31
+        }, 2000);
     </script>
 
 

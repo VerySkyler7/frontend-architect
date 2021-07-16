@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        {{message}}
+        <!-- v-on可以简写为@ -->
+        <button @click="clickBtn">click</button>
+        <!-- v-bind: 可以简写为: -->
+        <child v-for="item in list" :person="item" v-bind:key="item.id"/>
+    </div>
+    <script type="text/javascript">
+
+        Vue.component("child", {
+            template: "<div>{{person.name}}</div>",
+            props: ["person"]
+        })
+    
+        new Vue({
+            el: "#app",
+            data: {
+                message: "test",
+                list: [
+                    {name: '123', id:"123"},
+                    {name: '456', id:"456"},
+                ]
+            },
+            methods: {
+                clickBtn(){
+                    this.message = "test222"
+                }
+            }
+        }) 
+    </script>
+</body>
+</html>

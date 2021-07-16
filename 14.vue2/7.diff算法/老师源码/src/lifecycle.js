@@ -10,6 +10,7 @@ export function lifecycleMixin(Vue) {
         if(!prevVnode){ // 初次渲染
             vm.$el = patch(vm.$el, vnode);
         }else{
+            debugger
             vm.$el = patch(prevVnode,vnode);
         }
         vm._vnode = vnode

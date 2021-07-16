@@ -172,7 +172,6 @@
 
   strats.components = function (parentVal, childVal) {
     // Vue.options.components
-    debugger;
     var options = Object.create(parentVal); // 根据父对象构造一个新对象 options.__proto__= parentVal
 
     if (childVal) {
@@ -948,6 +947,7 @@
         // 初次渲染
         vm.$el = patch(vm.$el, vnode);
       } else {
+        debugger;
         vm.$el = patch(prevVnode, vnode);
       }
 
@@ -1345,7 +1345,6 @@
           _isComponent: true
         }); // new Sub 会用此选项和组件的配置进行合并
 
-        debugger;
         vm.$mount(); // 组件挂载完成后 会在 vnode.componentInstance.$el => <button>
       }
     };
@@ -1424,7 +1423,6 @@
   var render1 = compileToFunction(oldTemplate);
   var oldVnode = render1.call(vm1); // 虚拟dom
 
-  debugger;
   document.body.appendChild(createElm(oldVnode)); // v-if   v-else
 
   var newTemplate = "<div >\n<li key=\"D\">D</li>\n<li key=\"A\">A</li>\n<li key=\"B\">B</li>\n<li key=\"C\">C</li>\n</div>";

@@ -8,8 +8,7 @@ const superData = {
     binance: [],
     huoBi: [],
     temp: [
-        {name: 'bscx', sort: 10, count: 200, costPrice: 18.5, price:  14.76}, 
-        {name: 'ray', sort: 10, count: 205, costPrice: 0, price:  14}, 
+        // {name: 'bscx', sort: 10, count: 200, costPrice: 18.5, price:  14.76}
     ]
 };
 
@@ -24,9 +23,8 @@ const superData = {
     })
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'BNB', sort: 3, count: 30, costPrice: 50},  
-            {name: 'CAKE', sort: 4, count: 3450, costPrice: 12.1},
-            {name: 'BUNNY', sort: 4, count: 78, costPrice: 8},
+            {name: 'BNB', sort: 3, count: 0, costPrice: 50},  
+            {name: 'CAKE', sort: 4, count: 5000, costPrice: 12.1},
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -63,7 +61,6 @@ const superData = {
             {name: 'ksm', sort: 2, count: 0, costPrice: 103}, 
             {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
             {name: 'eth', sort: 6, count: 0, costPrice: 1840},
-            {name: 'sol', sort: 5, count: 8, costPrice: 0},
             {name: 'doge', sort: 11, count: 0, costPrice: 0},
             {name: 'matic', sort: 11, count: 0, costPrice: 0},
             {name: 'near', sort: 11, count: 0, costPrice: 0},
