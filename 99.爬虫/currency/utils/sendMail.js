@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const { beforeMail } = require('./beforeMail');
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.163.com',
@@ -10,21 +11,26 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendMail = (subject, html) => {
+const sendMail = (params) => {
+
+    const { subject, html, mailKey } = params;
+
+    if (!beforeMail(mailKey)) return;
+
     let mailOptions = {
         from: 'wangxpengx@163.com', // sender address
-        to: 'wangxpengx@gmail.com', // list of receivers
+        to: '379522872@qq.com', // list of receivers
         subject, // Subject line
         html // html body
     };
-    
+
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             return console.log(error);
         }
         console.log('Message sent: %s', info.messageId);
         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    
+
     });
 }
 

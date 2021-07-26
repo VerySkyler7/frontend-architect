@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer');
-const { getKsm2DotRatio } = require('./captured');
-
+const { captureCoin } = require('./captured');
 
 // 存放所有数据
 const superData = {
@@ -15,7 +14,7 @@ const superData = {
 // 定时爬取币安网数据
 (async () => {
     const browser = await puppeteer.launch({ headless: true })
-    
+
     const page = await browser.newPage()
     await page.goto('https://cn.investing.com/crypto/currencies', { timeout: 9999999 })
     page.on('console', msg => {
@@ -23,8 +22,8 @@ const superData = {
     })
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'BNB', sort: 3, count: 0, costPrice: 50},  
-            {name: 'CAKE', sort: 4, count: 5000, costPrice: 12.1},
+            { name: 'BNB', sort: 3, count: 0, costPrice: 50 },
+            { name: 'CAKE', sort: 4, count: 5000, costPrice: 12.1 },
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -33,7 +32,6 @@ const superData = {
                     prev.push(item)
                     return prev;
                 };
-
                 const price = nameElm.nextElementSibling.innerText;
                 const rise = nameElm.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
                 prev.push({ ...item, price, rise })
@@ -50,20 +48,20 @@ const superData = {
     const browser = await puppeteer.launch({ headless: true })
     const page = await browser.newPage();
     await page.goto('https://www.huobi.com/en-us/markets/', { timeout: 9999999 });
-    
+
     page.on('console', msg => {
-        if (msg._type === 'info')  superData.huoBi = JSON.parse(msg._text)
+        if (msg._type === 'info') superData.huoBi = JSON.parse(msg._text)
     })
 
     await page.evaluate(() => {
         const targetArr = [
-            {name: 'dot', sort: 1, count: 2450, costPrice: 4}, 
-            {name: 'ksm', sort: 2, count: 0, costPrice: 103}, 
-            {name: 'btc', sort: 7, count: 0, costPrice: 0}, 
-            {name: 'eth', sort: 6, count: 0, costPrice: 1840},
-            {name: 'doge', sort: 11, count: 0, costPrice: 0},
-            {name: 'matic', sort: 11, count: 0, costPrice: 0},
-            {name: 'near', sort: 11, count: 0, costPrice: 0},
+            { name: 'dot', sort: 1, count: 2450, costPrice: 4 },
+            { name: 'ksm', sort: 2, count: 0, costPrice: 103 },
+            { name: 'btc', sort: 7, count: 0, costPrice: 0 },
+            { name: 'eth', sort: 6, count: 0, costPrice: 1840 },
+            { name: 'doge', sort: 11, count: 0, costPrice: 0 },
+            { name: 'matic', sort: 11, count: 0, costPrice: 0 },
+            { name: 'uni', sort: 11, count: 0, costPrice: 0 },
         ];
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
@@ -85,7 +83,7 @@ const superData = {
 (() => {
     setInterval(() => {
         let arr = superData.huoBi.concat(superData.binance).concat(superData.temp);
-        if(arr.length > 8) {
+        if (arr.length > 8) {
             arr = arr.sort((a, b) => a.sort - b.sort)
         }
 
@@ -93,18 +91,19 @@ const superData = {
             // getKsm2DotRatio(item.name, item.price); // 获取ksm和dot的比例
             prev.total += item.price * item.count;
             prev.price += item.name.toLocaleLowerCase()
-                            + '  price：' + item.price 
-                            + '  costPrice：' + item.costPrice
-                            + '  rise：' + item.rise 
-                            + '  total：' + Number(Number(item.price) * item.count * 6.54).toFixed(2) 
-                            + '  count：' + item.count + '<br>\r\n'
-                            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.54).toFixed(2) + '<br>\r\n'
+                + '  price：' + item.price
+                + '  costPrice：' + item.costPrice
+                + '  rise：' + item.rise
+                + '  total：' + Number(Number(item.price) * item.count * 6.54).toFixed(2)
+                + '  count：' + item.count + '<br>\r\n';
+            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.54).toFixed(2) + '<br>\r\n'
+            captureCoin(item);
             return prev
-        }, {total: 0, price: ''});
+        }, { total: 0, price: '' });
 
-        if(res.total) {
+        if (res.total) {
             res.total = Number(res.total * 6.54).toFixed(2);
-            if(Math.abs(res.total - superData.currentTotal) > 20000) { // 当波动大于1万时 发一个邮件
+            if (Math.abs(res.total - superData.currentTotal) > 20000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
                 // sendMail(res.total, res.price + 'total：' + res.total)
             }
