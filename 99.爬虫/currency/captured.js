@@ -3,7 +3,7 @@
  * 对不同的价格做不同的逻辑处理
  */
 
-const { BTC_CAPTURE_PRICE } = require("./config");
+const { BTC_CAPTURE_PRICE, BTC_CAPTURE_PRICE_UP, BTC_CAPTURE_PRICE_DOWN } = require("./config");
 const { MailKeys } = require("./utils/beforeMail");
 const { sendMail } = require("./utils/sendMail");
 
@@ -29,9 +29,17 @@ const captureCoin = (coin) => {
  */
 strategyCoinFun.BTC = (coin) => {
     const { price } = coin;
-    if (price > BTC_CAPTURE_PRICE) {
+    if (price > BTC_CAPTURE_PRICE_UP) {
         sendMail({
             subject: 'BTC价格超过了' + BTC_CAPTURE_PRICE,
+            html: '',
+            mailKey: MailKeys.BTC_CAPTURED
+        })
+    }
+
+    if (price < BTC_CAPTURE_PRICE_DOWN) {
+        sendMail({
+            subject: 'BTC价格跌破了' + BTC_CAPTURE_PRICE,
             html: '',
             mailKey: MailKeys.BTC_CAPTURED
         })
