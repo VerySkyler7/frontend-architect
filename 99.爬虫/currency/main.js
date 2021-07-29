@@ -145,7 +145,7 @@ const superData = {
             { name: 'cake', fullName: 'pancakeswap', sort: 1, count: 5000, costPrice: 12.1 },
             { name: 'dot', fullName: 'polkadot100', sort: 2, count: 2450, costPrice: 4 },
             { name: 'bnb', fullName: 'binance-coin', sort: 3, count: 0, costPrice: 50 },
-            { name: 'matic', fullName: 'polygon', sort: 4, count: 0, costPrice: 0 },
+            { name: 'matic', fullName: 'matictoken', sort: 4, count: 0, costPrice: 0 },
             { name: 'ksm', fullName: 'kusama', sort: 5, count: 0, costPrice: 103 },
             { name: 'eth', fullName: 'ethereum', sort: 6, count: 0, costPrice: 1840 },
             { name: 'doge', fullName: 'dogecoin', sort: 7, count: 0, costPrice: 0 },
