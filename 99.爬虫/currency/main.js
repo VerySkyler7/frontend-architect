@@ -5,6 +5,7 @@ const { captureCoin } = require('./captured');
 const superData = {
     currentTotal: 0, // 当前总资产
     binance: [],
+    investing: [],
     huoBi: [],
     coinmarket: [],
     feixiaohao: [],
@@ -13,14 +14,65 @@ const superData = {
     ]
 };
 
-// 定时爬取币安网数据
+// 定时爬取binance网数据
+(async () => {
+    const browser = await puppeteer.launch({ headless: true })
+
+    const page = await browser.newPage()
+    await page.setViewport({
+        width: 1920,
+        height: 1580
+    });
+    await page.goto('https://www.binance.com/zh-CN/markets', { timeout: 9999999 })
+    page.on('console', msg => {
+        if (msg._type === 'info') superData.binance = JSON.parse(msg._text)
+    })
+    await page.evaluate(() => {
+
+        // 切换到板块模块
+        document.querySelectorAll('.css-sin44v')[1].click();
+
+        const targetArr = [
+            { name: 'btc', fullName: 'bitcoin', sort: 0, count: 0, costPrice: 0, price: 0 },
+            { name: 'cake', fullName: 'pancakeswap', sort: 1, count: 5000, costPrice: 12.1, price: 0 },
+            { name: 'dot', fullName: 'polkadot100', sort: 2, count: 2450, costPrice: 4, price: 0 },
+            { name: 'bnb', fullName: 'binance-coin', sort: 3, count: 0, costPrice: 50, price: 0 },
+            { name: 'matic', fullName: 'matictoken', sort: 4, count: 0, costPrice: 0, price: 0 },
+            { name: 'ksm', fullName: 'kusama', sort: 5, count: 0, costPrice: 103, price: 0 },
+            { name: 'eth', fullName: 'ethereum', sort: 6, count: 0, costPrice: 1840, price: 0 },
+            { name: 'doge', fullName: 'dogecoin', sort: 7, count: 0, costPrice: 0, price: 0 },
+            { name: 'uni', fullName: 'uniswap', sort: 8, count: 0, costPrice: 0, price: 0 },
+        ];
+
+        let i = 0;
+
+        setInterval(() => {
+            // 由于binance使用了虚拟列表，需手动滑动滚动条
+            const cotainer = document.querySelectorAll('#__APP')[0];
+            cotainer.scrollTo(0, 2000 * (i++ % 2));
+            const allCoins = document.querySelectorAll('.css-1wp9rgv');
+            allCoins.forEach(coin => {
+                const target = targetArr.find(item => item.name === coin.innerText.toLocaleLowerCase())
+                if (target) {
+                    target.price = coin.parentElement.parentElement.nextElementSibling.innerText.match(/[\d|,|\.]+/g)[0].replaceAll(",", "");
+                    target.rise = coin.parentElement.parentElement.nextElementSibling.nextElementSibling.innerText;
+                }
+            })
+            console.info(JSON.stringify(targetArr))
+
+        }, 1000);
+    });
+
+})();
+
+// 定时爬取investing网数据
 (async () => {
     const browser = await puppeteer.launch({ headless: true })
 
     const page = await browser.newPage()
     await page.goto('https://cn.investing.com/crypto/currencies', { timeout: 9999999 })
     page.on('console', msg => {
-        if (msg._type === 'info') superData.binance = JSON.parse(msg._text)
+        if (msg._type === 'info') superData.investing = JSON.parse(msg._text)
     })
     await page.evaluate(() => {
         const targetArr = [
@@ -107,12 +159,12 @@ const superData = {
                 let price = "";
                 let rise = "";
                 const elem = document.querySelector(`a[href="/currencies/${item.fullName}/"]`);
-                if(!elem) return prev;
+                if (!elem) return prev;
                 const firstParent = elem.parentElement;
-                firstParent.tagName.toUpperCase() == 'TD' ? 
-                    price = elem.parentElement.nextSibling.firstChild.innerText.match(/[\d|,|\.]+/g)[0] : 
+                firstParent.tagName.toUpperCase() == 'TD' ?
+                    price = elem.parentElement.nextSibling.firstChild.innerText.match(/[\d|,|\.]+/g)[0] :
                     price = elem.parentElement.parentElement.nextSibling.firstChild.firstElementChild.innerText.match(/[\d|,|\.]+/g)[0];
-                firstParent.tagName.toUpperCase() == 'TD' ? 
+                firstParent.tagName.toUpperCase() == 'TD' ?
                     rise = elem.parentElement.nextSibling.nextSibling.firstChild.innerText :
                     rise = elem.parentElement.parentElement.nextSibling.nextSibling.firstChild.innerText;
                 price = price.replaceAll(",", "");
@@ -154,7 +206,7 @@ const superData = {
         setInterval(() => {
             const res = targetArr.reduce((prev, item) => {
                 const elem = document.querySelector(`a[href="/currencies/${item.fullName}/"]`);
-                if(!elem) return prev;
+                if (!elem) return prev;
                 const price = elem.parentElement.parentElement.nextElementSibling.nextElementSibling.innerText
                 const rise = elem.parentElement.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
                 // let index = 0;
@@ -165,22 +217,21 @@ const superData = {
                 // }
                 // const rise = targetElm.innerText;
                 prev.push({ ...item, price, rise });
-                console.debug(item.name, price)
                 return prev
             }, []);
             console.info(JSON.stringify(res))
         }, 1000);
     });
 
-})();
+});
 
 // 有的价格没变动
 
 // 定时计算爬取后的数据
 (() => {
     setInterval(() => {
-        // let arr = superData.huoBi.concat(superData.binance).concat(superData.temp);
-        let arr = superData.feixiaohao;
+        // let arr = superData.huoBi.concat(superData.investing).concat(superData.temp);
+        let arr = superData.binance;
         if (arr.length > 8) {
             arr = arr.sort((a, b) => a.sort - b.sort)
         }
@@ -205,7 +256,7 @@ const superData = {
                 superData.currentTotal = res.total;
                 // sendMail(res.total, res.price + 'total：' + res.total)
             }
-            console.log(res.price + 'total：' + res.total)
+            console.log(`${res.price}total：${res.total} ${Date.now()}`)
         }
     }, 1000);
 })();
