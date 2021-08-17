@@ -9,7 +9,7 @@ const { sendMail } = require("./utils/sendMail");
 
 let ksmPrice = 0;
 let dotPrice = 0;
-let count = 0; // 邮件的发送次数 大于三次后不再发送
+let dogePrice = 0;
 let s = null;
 const strategyCoinFun = {}
 
@@ -31,7 +31,7 @@ strategyCoinFun.BTC = (coin) => {
     const { price } = coin;
     if (price > BTC_CAPTURE_PRICE_UP) {
         sendMail({
-            subject: 'BTC价格超过了' + BTC_CAPTURE_PRICE,
+            subject: 'BTC价格超过了' + BTC_CAPTURE_PRICE_UP,
             html: '',
             mailKey: MailKeys.BTC_CAPTURED
         })
@@ -47,7 +47,6 @@ strategyCoinFun.BTC = (coin) => {
 }
 
 /**
- * 已作废
  * 比对dot和ksm的价格，用于做波段
  * @returns 
  */
@@ -65,10 +64,9 @@ const getKsm2DotRatio = (coinName, coinPrice) => {
     console.log('ksm/dot/ratio:', ratio.toFixed(2))
 
     if (s) return;
-    if (ratio > 0 && ratio < 16.8 && count < 3) {
+    if (ratio > 0 && ratio < 16.8) {
         s = setTimeout(() => {
             s = null;
-            count++;
             sendMail({
                 subject: 'KSM/DOT',
                 html: ratio.toFixed(2),
@@ -78,7 +76,34 @@ const getKsm2DotRatio = (coinName, coinPrice) => {
     }
 }
 
+/**
+ * 比对doge和dot的价格，用于将dot换成doge
+ * @returns 
+ */
+ const getDot2DogeRatio = (coinName, coinPrice) => {
+
+    if (coinName === 'dot') {
+        dotPrice = coinPrice;
+    } else if (coinName === 'doge') {
+        dogePrice = coinPrice;
+    } else {
+        return;
+    }
+
+    const ratio = dotPrice / dogePrice;
+    console.log('dot/doge/ratio:', ratio.toFixed(2))
+
+    if (ratio > 100 && dogePrice > 0) {
+        sendMail({
+            subject: 'DOT/DOGE',
+            html: ratio.toFixed(2),
+            mailKey: MailKeys.KSM_DOT
+        });
+    }
+}
+
 module.exports = {
     getKsm2DotRatio,
+    getDot2DogeRatio,
     captureCoin
 }

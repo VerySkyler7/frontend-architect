@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
-const { captureCoin } = require('./captured');
+const { captureCoin, getDot2DogeRatio } = require('./captured');
+const { sendMail } = require('./utils/sendMail');
 
 // 存放所有数据
 const superData = {
@@ -34,8 +35,8 @@ const superData = {
 
         const targetArr = [
             { name: 'btc', fullName: 'bitcoin', sort: 0, count: 0, costPrice: 0, price: 0 },
-            { name: 'cake', fullName: 'pancakeswap', sort: 1, count: 5000, costPrice: 12.1, price: 0 },
-            { name: 'dot', fullName: 'polkadot100', sort: 2, count: 2450, costPrice: 4, price: 0 },
+            { name: 'cake', fullName: 'pancakeswap', sort: 1, count:  5150, costPrice: 12.1, price: 0 },
+            { name: 'dot', fullName: 'polkadot100', sort: 2, count: 2360, costPrice: 4, price: 0 },
             { name: 'bnb', fullName: 'binance-coin', sort: 3, count: 0, costPrice: 50, price: 0 },
             { name: 'matic', fullName: 'matictoken', sort: 4, count: 0, costPrice: 0, price: 0 },
             { name: 'ksm', fullName: 'kusama', sort: 5, count: 0, costPrice: 103, price: 0 },
@@ -237,24 +238,28 @@ const superData = {
         }
 
         const res = arr.reduce((prev, item) => {
-            // getKsm2DotRatio(item.name, item.price); // 获取ksm和dot的比例
+            getDot2DogeRatio(item.name, item.price); // 获取dot和doge的比例
             prev.total += item.price * item.count;
             prev.price += item.name.toLocaleLowerCase()
                 + '  price：' + item.price
                 + '  costPrice：' + item.costPrice
                 + '  rise：' + item.rise
-                + '  total：' + Number(Number(item.price) * item.count * 6.54).toFixed(2)
+                + '  total：' + Number(Number(item.price) * item.count * 6.42).toFixed(2)
                 + '  count：' + item.count + '<br>\r\n';
-            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.54).toFixed(2) + '<br>\r\n'
+            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.42).toFixed(2) + '<br>\r\n'
             captureCoin(item);
             return prev
         }, { total: 0, price: '' });
 
         if (res.total) {
-            res.total = Number(res.total * 6.54).toFixed(2);
-            if (Math.abs(res.total - superData.currentTotal) > 20000) { // 当波动大于1万时 发一个邮件
+            res.total = Number(res.total * 6.42).toFixed(2);
+            if (Math.abs(res.total - superData.currentTotal) > 10000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
-                // sendMail(res.total, res.price + 'total：' + res.total)
+                sendMail({
+                    subject: res.total, 
+                    html: res.price + 'total：' + res.total,
+                    mailkey: 'TOTAL_ASSET'
+                })
             }
             console.log(`${res.price}total：${res.total} ${Date.now()}`)
         }

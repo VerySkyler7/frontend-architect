@@ -5,10 +5,14 @@ const { MAIL_LIMIT_TIME } = require("../config");
  * 同一业务的邮件，可能会做时间间隔的处理
  */
 const MailKeys = {
+    /** 监测总资产变化 */
+    TOTAL_ASSET: "TOTAL_ASSET",
     /**  捕获BTC价格 */
     BTC_CAPTURED: "BTC_CAPTURED",
     /** 捕获KSM和DOT的价格 */
-    KSM_DOT: "KSM_DOT"
+    KSM_DOT: "KSM_DOT",
+    /** 捕获DOT和DOGE的价格 */
+    KSM_DOT: "DOT_DOGE",
 }
 
 /**
