@@ -1,10 +1,12 @@
 const puppeteer = require('puppeteer');
-const { captureCoin, getDot2DogeRatio } = require('./captured');
+const { getExchangeRage } = require('./beforeCapture');
+const { captureCoin, getDot2DogeRatio } = require('./compute');
 const { sendMail } = require('./utils/sendMail');
 
 // 存放所有数据
 const superData = {
     currentTotal: 0, // 当前总资产
+    exchangeRage: 0, // 汇率
     binance: [],
     investing: [],
     huoBi: [],
@@ -18,6 +20,9 @@ const superData = {
 // 定时爬取binance网数据
 (async () => {
     const browser = await puppeteer.launch({ headless: true })
+
+    const buyUPage = await browser.newPage();
+    await getExchangeRage(buyUPage, superData);
 
     const page = await browser.newPage()
     await page.setViewport({
@@ -37,12 +42,12 @@ const superData = {
             { name: 'btc', fullName: 'bitcoin', sort: 0, count: 0, costPrice: 0, price: 0 },
             { name: 'cake', fullName: 'pancakeswap', sort: 1, count:  5150, costPrice: 12.1, price: 0 },
             { name: 'dot', fullName: 'polkadot100', sort: 2, count: 2360, costPrice: 4, price: 0 },
+            { name: 'doge', fullName: 'dogecoin', sort: 2.5, count: 0, costPrice: 0, price: 0 },
             { name: 'bnb', fullName: 'binance-coin', sort: 3, count: 0, costPrice: 50, price: 0 },
             { name: 'matic', fullName: 'matictoken', sort: 4, count: 0, costPrice: 0, price: 0 },
             { name: 'ksm', fullName: 'kusama', sort: 5, count: 0, costPrice: 103, price: 0 },
             { name: 'eth', fullName: 'ethereum', sort: 6, count: 0, costPrice: 1840, price: 0 },
-            { name: 'doge', fullName: 'dogecoin', sort: 7, count: 0, costPrice: 0, price: 0 },
-            { name: 'uni', fullName: 'uniswap', sort: 8, count: 0, costPrice: 0, price: 0 },
+            { name: 'uni', fullName: 'uniswap', sort: 7, count: 0, costPrice: 0, price: 0 },
         ];
 
         let i = 0;
@@ -244,15 +249,15 @@ const superData = {
                 + '  price：' + item.price
                 + '  costPrice：' + item.costPrice
                 + '  rise：' + item.rise
-                + '  total：' + Number(Number(item.price) * item.count * 6.42).toFixed(2)
+                + '  total：' + Number(Number(item.price) * item.count * superData.exchangeRage).toFixed(2)
                 + '  count：' + item.count + '<br>\r\n';
-            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * 6.42).toFixed(2) + '<br>\r\n'
+            // + '  profit：' + Number(item.count * (item.price - item.costPrice) * superData.exchangeRage).toFixed(2) + '<br>\r\n'
             captureCoin(item);
             return prev
         }, { total: 0, price: '' });
 
         if (res.total) {
-            res.total = Number(res.total * 6.42).toFixed(2);
+            res.total = Number(res.total * superData.exchangeRage).toFixed(2);
             if (Math.abs(res.total - superData.currentTotal) > 10000) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
                 sendMail({

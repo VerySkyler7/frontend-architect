@@ -91,8 +91,8 @@ const getKsm2DotRatio = (coinName, coinPrice) => {
     }
 
     const ratio = dotPrice / dogePrice;
-    console.log('dot/doge/ratio:', ratio.toFixed(2))
-
+    coinName === 'doge' && dogePrice > 0 && console.log('dot/doge ratio:', ratio.toFixed(2))
+    
     if (ratio > 100 && dogePrice > 0) {
         sendMail({
             subject: 'DOT/DOGE',
