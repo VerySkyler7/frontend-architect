@@ -9,10 +9,8 @@ const MailKeys = {
     TOTAL_ASSET: "TOTAL_ASSET",
     /**  捕获BTC价格 */
     BTC_CAPTURED: "BTC_CAPTURED",
-    /** 捕获KSM和DOT的价格 */
-    KSM_DOT: "KSM_DOT",
-    /** 捕获DOT和DOGE的价格 */
-    KSM_DOT: "DOT_DOGE",
+    /** 监听不同币种的价格比率 */
+    MONITOR_RATIO: "MONITOR_RATIO",
 }
 
 /**

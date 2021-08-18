@@ -7,10 +7,6 @@ const { BTC_CAPTURE_PRICE, BTC_CAPTURE_PRICE_UP, BTC_CAPTURE_PRICE_DOWN } = requ
 const { MailKeys } = require("./utils/beforeMail");
 const { sendMail } = require("./utils/sendMail");
 
-let ksmPrice = 0;
-let dotPrice = 0;
-let dogePrice = 0;
-let s = null;
 const strategyCoinFun = {}
 
 /**
@@ -47,55 +43,25 @@ strategyCoinFun.BTC = (coin) => {
 }
 
 /**
- * 比对dot和ksm的价格，用于做波段
+ * 计算指定coin之间的比率
+ * coinName1 的price是除数，coinName2 是被除数
+ * manitorRatio 监测发邮件的比例
+ * isGreater 是否为大于监测的比例时发邮件
  * @returns 
  */
-const getKsm2DotRatio = (coinName, coinPrice) => {
+ const getMonitorRatio = ({coinList, coinName1, coinName2, monitorRatio, isGreater}) => {
+     if(!coinList || !coinList.length) return;
+     
+     const price1 = coinList.find(item => item.name === coinName1).price;
+     const price2 = coinList.find(item => item.name === coinName2).price;
+     if(!price1 || !price2) return;
 
-    if (coinName === 'ksm') {
-        ksmPrice = coinPrice;
-    } else if (coinName === 'dot') {
-        dotPrice = coinPrice;
-    } else {
-        return;
-    }
-
-    const ratio = ksmPrice / dotPrice;
-    console.log('ksm/dot/ratio:', ratio.toFixed(2))
-
-    if (s) return;
-    if (ratio > 0 && ratio < 16.8) {
-        s = setTimeout(() => {
-            s = null;
-            sendMail({
-                subject: 'KSM/DOT',
-                html: ratio.toFixed(2),
-                mailKey: MailKeys.KSM_DOT
-            });
-        }, 1000 * 60 * 15);
-    }
-}
-
-/**
- * 比对doge和dot的价格，用于将dot换成doge
- * @returns 
- */
- const getDot2DogeRatio = (coinName, coinPrice) => {
-
-    if (coinName === 'dot') {
-        dotPrice = coinPrice;
-    } else if (coinName === 'doge') {
-        dogePrice = coinPrice;
-    } else {
-        return;
-    }
-
-    const ratio = dotPrice / dogePrice;
-    coinName === 'doge' && dogePrice > 0 && console.log('dot/doge ratio:', ratio.toFixed(2))
+    const ratio = price1 / price2;
+    console.log(`${coinName1}/${coinName2} ratio:`, ratio.toFixed(2));
     
-    if (ratio > 100 && dogePrice > 0) {
+    if((isGreater && ratio > monitorRatio) || (!isGreater && ratio < monitorRatio)) {
         sendMail({
-            subject: 'DOT/DOGE',
+            subject: `${coinName1}/${coinName2}`,
             html: ratio.toFixed(2),
             mailKey: MailKeys.KSM_DOT
         });
@@ -103,7 +69,6 @@ const getKsm2DotRatio = (coinName, coinPrice) => {
 }
 
 module.exports = {
-    getKsm2DotRatio,
-    getDot2DogeRatio,
+    getMonitorRatio,
     captureCoin
 }

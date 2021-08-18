@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const { getExchangeRage } = require('./beforeCapture');
-const { captureCoin, getDot2DogeRatio } = require('./compute');
+const { captureCoin, getMonitorRatio } = require('./compute');
+const { TOTAL_PROPERTY, MONITOR_RATIO_LIST } = require('./config');
 const { sendMail } = require('./utils/sendMail');
 
 // 存放所有数据
@@ -243,22 +244,21 @@ const superData = {
         }
 
         const res = arr.reduce((prev, item) => {
-            getDot2DogeRatio(item.name, item.price); // 获取dot和doge的比例
             prev.total += item.price * item.count;
             prev.price += item.name.toLocaleLowerCase()
-                + '  price：' + item.price
-                + '  costPrice：' + item.costPrice
-                + '  rise：' + item.rise
-                + '  total：' + Number(Number(item.price) * item.count * superData.exchangeRage).toFixed(2)
-                + '  count：' + item.count + '<br>\r\n';
+            + '  price：' + item.price
+            + '  costPrice：' + item.costPrice
+            + '  rise：' + item.rise
+            + '  total：' + Number(Number(item.price) * item.count * superData.exchangeRage).toFixed(2)
+            + '  count：' + item.count + '<br>\r\n';
             // + '  profit：' + Number(item.count * (item.price - item.costPrice) * superData.exchangeRage).toFixed(2) + '<br>\r\n'
             captureCoin(item);
             return prev
         }, { total: 0, price: '' });
-
+        
         if (res.total) {
             res.total = Number(res.total * superData.exchangeRage).toFixed(2);
-            if (Math.abs(res.total - superData.currentTotal) > 10000) { // 当波动大于1万时 发一个邮件
+            if (Math.abs(res.total - superData.currentTotal) > TOTAL_PROPERTY) { // 当波动大于1万时 发一个邮件
                 superData.currentTotal = res.total;
                 sendMail({
                     subject: res.total, 
@@ -268,5 +268,9 @@ const superData = {
             }
             console.log(`${res.price}total：${res.total} ${Date.now()}`)
         }
+
+        MONITOR_RATIO_LIST.forEach(item => { 
+            getMonitorRatio({coinList: arr, ...item});  // 获取指定币之间的比例
+        })
     }, 1000);
 })();
